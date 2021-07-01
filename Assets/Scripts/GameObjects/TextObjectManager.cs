@@ -15,7 +15,7 @@ public class TextObjectManager : MonoBehaviour
     void Start()
     {
         textObjects = new Dictionary<string, FloatingText>();
-        lastText = CreateTextObject(null, false, "0", "The first text");
+        lastText = CreateTextObject(null, false, "", GameTextParser.paragraphs[0]);
     }
 
     // Update is called once per frame
