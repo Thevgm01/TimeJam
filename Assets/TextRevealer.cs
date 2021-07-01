@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TextRevealer : MonoBehaviour
 {
     TMPro.TextMeshPro tmp;
 
-    public float lettersPerSecond = 50f;
-    private string actualText;
+    public float wordsPerSecond = 10f;
+    private string[] words;
 
     private IEnumerator coroutine;
 
@@ -15,7 +16,7 @@ public class TextRevealer : MonoBehaviour
     void Start()
     {
         tmp = GetComponent<TMPro.TextMeshPro>();
-        actualText = tmp.text;
+        words = tmp.text.Trim().Split(' ');
         coroutine = RevealText();
         StartCoroutine(coroutine);
     }
@@ -23,14 +24,13 @@ public class TextRevealer : MonoBehaviour
     IEnumerator RevealText()
     {
         float timeTracker = 0;
-        int curLetterIndex = 0;
+        int curWordIndex = 0;
 
-        while (curLetterIndex < actualText.Length)
+        while (curWordIndex < words.Length)
         {
             timeTracker += Time.deltaTime;
-            curLetterIndex = (int)Mathf.Clamp(timeTracker * lettersPerSecond, 0, actualText.Length);
-            tmp.text = actualText.Substring(0, curLetterIndex);
-            Debug.Log(curLetterIndex);
+            curWordIndex = (int)Mathf.Clamp(timeTracker * wordsPerSecond, 0, words.Length);
+            tmp.text = string.Join(" ", new ArraySegment<string>(words, 0, curWordIndex));
             yield return null;
         }
     }
