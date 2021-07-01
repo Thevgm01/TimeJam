@@ -11,6 +11,7 @@ public class CameraScroller : MonoBehaviour
 
     Camera mainCam;
     float desiredSize;
+    Vector3 mousePositionAtScroll;
 
     // Start is called before the first frame update
     void Awake()
@@ -30,8 +31,16 @@ public class CameraScroller : MonoBehaviour
         if (scrollAmount != 0)
         {
             desiredSize += scrollAmount * Time.deltaTime;
+            mousePositionAtScroll = Input.mousePosition;
         }
 
+        Vector3 originalMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
         mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, desiredSize, lerpSpeed * Time.deltaTime);
+        Vector3 newMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
+        
+        Vector3 diff = originalMouseWorld - newMouseWorld;
+        Vector3 slidePos = transform.position + diff;
+        slidePos.z = 0;
+        transform.position = slidePos;
     }
 }
