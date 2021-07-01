@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class CameraPanner : MonoBehaviour
 {
-    Vector3 velocity, desiredPosition;
+    Camera mainCam;
+    Vector3 lastMousePosition;
+    Vector3 cameraVelocity;
+    Vector3 desiredCameraPosition;
+
     public float lerpSpeed;
-    [Range(0, 1)] public float flingDecayStrength;
+    [Range(0, 1)] public float velocityDecay;
 
     void Awake()
     {
-        velocity = Vector3.zero;
-        desiredPosition = transform.position;
+        mainCam = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (Input.GetMouseButton(0))
         {
-            velocity.x = -Input.GetAxis("Mouse X");
-            velocity.y = -Input.GetAxis("Mouse Y");
-        }
-        else if (velocity.sqrMagnitude > 0)
-        {
-            velocity *= 1 - flingDecayStrength;
+            cameraVelocity = mainCam.ScreenToWorldPoint(Input.mousePosition) - mainCam.ScreenToWorldPoint(lastMousePosition);
         }
 
-        desiredPosition += velocity;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, lerpSpeed * Time.deltaTime);
+        desiredCameraPosition -= cameraVelocity;
+        transform.position = Vector3.Lerp(transform.position, desiredCameraPosition, lerpSpeed * Time.deltaTime);
+
+        lastMousePosition = Input.mousePosition;
+    }
+
+    void FixedUpdate()
+    {
+        if (!Input.GetMouseButton(0))
+        {
+            cameraVelocity *= 1f - velocityDecay;
+        }
     }
 }
