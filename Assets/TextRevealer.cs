@@ -8,27 +8,29 @@ public class TextRevealer : MonoBehaviour
 
     public float lettersPerSecond = 50f;
 
+    float timeTracker = 0;
+    int curLetterIndex = 0;
+
     private IEnumerator coroutine;
 
     // Start is called before the first frame update
     void Start()
     {
         tmp = GetComponent<TMPro.TextMeshPro>();
-        coroutine = RevealText();
-        StartCoroutine(coroutine);
+        tmp.maxVisibleCharacters = 0;
     }
 
-    IEnumerator RevealText()
+    void Update()
     {
-        float timeTracker = 0;
-        int curLetterIndex = 0;
-
-        while (curLetterIndex < tmp.text.Length)
+        if (curLetterIndex < tmp.text.Length)
         {
             timeTracker += Time.deltaTime;
             curLetterIndex = (int)Mathf.Clamp(timeTracker * lettersPerSecond, 0, tmp.text.Length);
             tmp.maxVisibleCharacters = curLetterIndex;
-            yield return null;
+        }
+        else
+        {
+            Destroy(this);
         }
     }
 }
