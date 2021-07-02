@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TextObjectManager : MonoBehaviour
 {
+    public TextAsset gameText;
     public GameObject baseTextObject;
     public float verticalSpaceBetweenObjects;
 
@@ -11,11 +12,15 @@ public class TextObjectManager : MonoBehaviour
 
     FloatingText lastText;
 
+    GameTextParser gameTextParser;
+    int index = 1;
+
     // Start is called before the first frame update
     void Start()
     {
         textObjects = new Dictionary<string, FloatingText>();
-        lastText = CreateTextObject(null, false, "", GameTextParser.paragraphs[0]);
+        gameTextParser = new GameTextParser(gameText);
+        lastText = CreateTextObject(null, false, "", gameTextParser.paragraphs[0]);
     }
 
     // Update is called once per frame
@@ -23,7 +28,8 @@ public class TextObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            lastText = CreateTextObject(lastText, true, "", "Object " + Time.time + ": Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+            lastText = CreateTextObject(lastText, true, "", gameTextParser.paragraphs[index]);
+            ++index;
         }
     }
 

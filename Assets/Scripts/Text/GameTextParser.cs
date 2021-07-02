@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public static class GameTextParser
+public class GameTextParser
 {
-    [SerializeField] private static TextAsset gameText;
-    public static List<string> paragraphs;
-    public static Dictionary<string, TextCommand> commands;
+    public List<string> paragraphs;
+    public Dictionary<string, TextCommand> commands;
 
     // Start is called before the first frame update
-    static GameTextParser()
+    public GameTextParser(TextAsset gameText)
     {
         paragraphs = new List<string>();
         commands = new Dictionary<string, TextCommand>();
@@ -19,6 +18,7 @@ public static class GameTextParser
         for (int i = 0; i < lines.Length; ++i)
         {
             string line = lines[i].Trim();
+            //Debug.Log(line);
             if (line == "")
             {
                 continue;
@@ -31,17 +31,17 @@ public static class GameTextParser
         }
     }
 
-    private static TextCommand GetCommand(string line)
+    private TextCommand GetCommand(string line)
     {
         string[] sections = line.Split(',');
 
         if (line.StartsWith("GOTO")) return new TextCommand(TextCommand.CommandType.Goto, line.Substring(5));
         else if (line.StartsWith("MINOR CHOICE")) return new TextCommand(TextCommand.CommandType.MinorChoice, new ArraySegment<string>(sections, 1, sections.Length - 2).Array);
         else if (line.StartsWith("MAJOR CHOICE")) return new TextCommand(TextCommand.CommandType.MajorChoice, new ArraySegment<string>(sections, 1, sections.Length - 2).Array);
-        else return new TextCommand(TextCommand.CommandType.Id, line.Substring(5));
+        else return new TextCommand(TextCommand.CommandType.Id, line);
     }
 
-    public static bool IsCommand(string line)
+    public bool IsCommand(string line)
     {
         return commands[line] != null;
     }

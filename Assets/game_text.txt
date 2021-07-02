@@ -1,22 +1,14 @@
-[0]
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mattis magna et scelerisque sollicitudin. Integer sollicitudin aliquam lorem sed posuere. Aenean ac ligula nisl. Duis pharetra libero sapien, ac rhoncus diam bibendum vitae. Suspendisse porttitor lacus mi, ut dignissim massa sollicitudin vel. Donec lacinia libero tortor, quis posuere diam vehicula a. Fusce porta ex ac nisi iaculis bibendum sed quis dui. Duis ornare enim lacus, sit amet placerat nibh dictum sagittis. Pellentesque sit amet cursus sem. Nullam ut tincidunt mi, quis dictum velit. Aliquam convallis turpis ut ex ornare pharetra. Aenean elementum consectetur dolor, ut ultricies mauris cursus eget. Phasellus a venenatis justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam pharetra nibh nec metus ultricies, eget imperdiet velit eleifend.
+You wake up in a room. You have no idea how you got here. All you know is that you must escape.
+[ROOM_1]
+Looking around, you see a door on your left and a box in the corner of the room.
+[MINOR_CHOICE, Open the door [GOTO DOOR_1], Open the box [GOTO 2]]
 
-Praesent eleifend tellus a lorem hendrerit lobortis a et purus. Sed varius massa eget velit dictum condimentum. Praesent cursus nibh nec tortor mattis pellentesque. Donec tristique porta nisi non vulputate. Vestibulum fermentum leo ipsum, ac blandit elit ornare in. Vestibulum sagittis, lectus et interdum fermentum, dolor justo laoreet nisl, a tincidunt neque leo semper ipsum. Aliquam erat volutpat. Aenean urna massa, vulputate sit amet tincidunt vehicula, posuere non orci. Nam tempus imperdiet felis, a molestie lacus varius ut. Cras ut ligula at nisi tempus sagittis lobortis elementum odio. Proin vehicula hendrerit quam, congue consequat tortor elementum nec.
-[MINOR CHOICE, Choice A [GOTO 1], Choice B [GOTO 2]]
+[DOOR_1]
+You walk over to the door. It is made of wood and has a metal knob. It appears to be very old.
+The handle is locked.
+[MINOR_CHOICE, Turn away [GOTO ROOM_1], [SECRET KEY_1] Unlock it with the key [GOTO ROOM_2]]
 
-[1]
-In hac habitasse platea dictumst. Morbi lobortis lorem commodo purus placerat, quis tincidunt dui cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur condimentum, mi quis maximus malesuada, felis erat iaculis mi, id laoreet augue velit in massa. Curabitur ut rutrum dui. Nam eget leo tempus lacus pretium laoreet ac id libero. Morbi vulputate ornare ante id accumsan. Ut rutrum semper lorem, in sodales justo hendrerit egestas. Nullam accumsan convallis dapibus. Proin varius mi eu lectus hendrerit, ac suscipit elit tincidunt.
-
-Nunc eu orci ex. Duis gravida metus sit amet metus facilisis, sit amet finibus ipsum faucibus. Nunc id ipsum non lectus blandit sodales. Nullam tincidunt dictum tristique. Phasellus ultricies malesuada elit eget dignissim. Praesent consectetur libero in nisl sollicitudin hendrerit. Praesent blandit arcu non ante pharetra pellentesque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aenean molestie accumsan dolor in lacinia. Quisque dignissim dictum pulvinar. Vestibulum non dictum lacus. Aliquam erat volutpat. Aenean vitae felis vitae nisl consequat accumsan. Suspendisse potenti. Aliquam posuere odio eu tellus suscipit egestas id in tortor. Maecenas nec quam lacus.
-[GOTO 3]
-
-[2]
-Nulla in rutrum arcu. Donec augue erat, interdum vitae eros in, vulputate luctus purus. Vivamus commodo ultricies ex, eu convallis enim mollis vitae. Phasellus interdum sit amet orci eu aliquam. Aenean sodales faucibus luctus. Aliquam molestie facilisis sapien, ornare bibendum dolor sollicitudin et. In accumsan elit sed consequat facilisis. Cras ut ante nec odio consequat dignissim non in odio. Cras varius ex ac justo dapibus, id pretium erat dignissim. Etiam auctor enim sed dictum egestas.
-[GOTO 3]
-
-[3]
-Mauris lectus mauris, imperdiet et metus eu, lacinia tristique augue. Aliquam maximus eros ut massa ullamcorper lacinia. Pellentesque mauris metus, semper blandit tempor in, viverra ut nisi. Pellentesque neque tellus, ullamcorper nec facilisis sed, sollicitudin maximus nulla. Suspendisse fermentum, eros sed accumsan mollis, tortor mauris efficitur felis, at ultricies est lacus vel tellus. Maecenas condimentum dolor eu finibus feugiat. Pellentesque in tristique est. Suspendisse dolor ex, fringilla venenatis elementum eu, pellentesque sed risus. Donec vestibulum, sapien eu viverra gravida, mi augue accumsan elit, et pellentesque nisl felis vitae odio. Donec non viverra quam. Cras sollicitudin mauris sit amet viverra consequat. Maecenas non neque diam.
-
-Etiam neque enim, vulputate ut semper eget, luctus vitae nulla. In hac habitasse platea dictumst. Cras et diam in nunc cursus rutrum. Proin sit amet tellus vel sapien molestie malesuada vel ut sapien. Vivamus porttitor risus et eros aliquam tristique. Morbi viverra erat vel dui porta, eu facilisis ligula rutrum. Nunc vel nisl imperdiet, pretium dui id, semper mauris. Duis semper, tortor nec vehicula egestas, ante erat dapibus turpis, et cursus libero lorem id leo. Aliquam mattis neque sed semper dictum. Quisque ut enim augue. Fusce aliquet vulputate justo, nec malesuada nibh laoreet non. In porttitor elit dolor, quis pulvinar sapien mollis et. Praesent quis ipsum ut ex viverra ornare. Donec viverra eros non suscipit porttitor. Vestibulum posuere velit vulputate, laoreet tellus blandit, faucibus arcu.
-
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec sapien enim, interdum at eros eu, facilisis sagittis velit. Etiam quis tristique mauris. Nulla tellus odio, dictum et pharetra vitae, consequat vel urna. Duis pulvinar lectus velit. Ut ligula odio, accumsan vel porttitor id, commodo nec orci. Sed dignissim turpis a leo iaculis porta. Phasellus tristique tempor dolor. Praesent eu lacus diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed orci nunc, euismod sit amet gravida et, dictum nec velit. Donec id auctor libero. Suspendisse commodo aliquam velit, ac ornare neque egestas at. Donec aliquam nec libero sed iaculis. Etiam viverra libero vel accumsan vestibulum. Vivamus lacus lectus, imperdiet id pharetra non, feugiat eu velit.
+[ROOM_2]
+You walk through the old door and find yourself in a hallway. Old pictures are hanging on either side. They give you an uncomfortable feeling.
+The hairs on the back of your neck stand up. You see eyes in the darkness.
+[FATAL_CHOICE, Stay put [GOTO DEATH_1]]
