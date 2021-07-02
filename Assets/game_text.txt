@@ -1,14 +1,34 @@
-You wake up in a room. You have no idea how you got here. All you know is that you must escape.
-[ROOM_1]
-Looking around, you see a door on your left and a box in the corner of the room.
-[MINOR_CHOICE, Open the door [GOTO DOOR_1], Open the box [GOTO 2]]
+[START] You wake up in a room. You have no idea how you got here. All you know is that you must escape.
+[ROOM1] Looking around, you see a door on your left and a box in the corner of the room.
+[MINOR_CHOICE: Open the door [GOTO: DOOR1],Open the box [GOTO: BOX1]]
 
-[DOOR_1]
-You walk over to the door. It is made of wood and has a metal knob. It appears to be very old.
+[DOOR1] You walk over to the door. It is made of wood and has a metal knob. It appears to be very old.
 The handle is locked.
-[MINOR_CHOICE, Turn away [GOTO ROOM_1], [SECRET KEY_1] Unlock it with the key [GOTO ROOM_2]]
+[MINOR_CHOICE: Turn away [GOTO: ROOM1], [SECRET: KEY1] Unlock it with the key [GOTO: ROOM2]]
 
-[ROOM_2]
-You walk through the old door and find yourself in a hallway. Old pictures are hanging on either side. They give you an uncomfortable feeling.
-The hairs on the back of your neck stand up. You see eyes in the darkness.
-[FATAL_CHOICE, Stay put [GOTO DEATH_1]]
+[BOX1] You stoop down over the box. It has a simple latch mechanism. You open it up and see a rusty key inside.
+[GET: KEY1]
+[MINOR_CHOICE: Go to the door [GOTO: DOOR1]]
+
+[ROOM2] You walk through the old door and find yourself in a hallway. Old pictures are hanging on either side. They give you an uncomfortable feeling.
+[WOLF] The hairs on the back of your neck stand up. You see eyes in the darkness. The eyes move forward to reveal the form of a ferocious wolf.
+There is a hatchet on the wall near the wolf. You could probably reach it, but you might be killed before you can get off a good swing.
+[FATAL_CHOICE: Stay put [GOTO: DEATH1], Grab the hatchet [GOTO: GRAB_HATCHET], [TIME: HATCHET] Strike the wolf with your hatchet [GOTO:KILL_WOLF]]
+
+[DEATH1] You remain stationary, frozen in fear. The wolf edges closer, closer still. Finally it jumps on you, and you're [BURN: TORN LIMB FROM LIMB].
+[DEAD]
+
+[DEATH2] You lunge forward and manage to grab onto the hatchet.
+[GET: HATCHET]
+The wolf lunges at you.
+[FATAL_CHOICE: Swing desperately [GOTO: WOLF_DEATH_WITH_HATCHET, [TIME: HATCHET] Cower in fear [GOTO: WOLF_DEATH_WITHOUT_HATCHET]]
+
+[WOLF_DEATH_WITH_HATCHET] As you feared, the wolf lunges upon you before you can get a swing off. It uses its mighty canines to bite into you. You are [BURN: DEVOURED] by the wolf.
+However, you feel a strangeness. The final point where your free will mattered... could you have done something differently?
+[DEAD]
+
+[WOLF_DEATH_WITHOUT_HATCHET] You followed your instincts and sent your hatchet away. You pray that it made a difference to someone, somewhere.
+[DEAD]
+
+[KILL_WOLF] How did this hatchet appear in your hands? You don't know, but you choose not to let that stop you as you swing it into the unprepared wolf.
+Your hatchet makes a forceful connection, and the wolf staggers away.
