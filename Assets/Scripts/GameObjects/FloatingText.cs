@@ -16,8 +16,15 @@ public class FloatingText : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine("Initialize");
+    }
+
+    IEnumerator Initialize()
+    {
         TMPro.TextMeshPro tmp = GetComponent<TMPro.TextMeshPro>();
         tmp.text = node.Text;
+        yield return null;
+        dimensions = GetComponent<RectTransform>().rect; // Allow time for the content size fitter to change values
 
         if (node.parent != null)
         {
