@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IInventoryLink
+public interface ITextInventory
 {
-
+    void ModifyInventory();
 }

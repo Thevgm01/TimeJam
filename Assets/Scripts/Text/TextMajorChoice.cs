@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MajorChoice : TextMinorChoice
+public class TextMajorChoice : TextMinorChoice
 {
 
 }

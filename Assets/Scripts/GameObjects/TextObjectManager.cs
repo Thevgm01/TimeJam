@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class TextObjectManager : MonoBehaviour
 {
-    public TextAsset gameText;
-    public GameObject baseTextObject;
+    public TextAsset gameScript;
+    public GameObject textPrefab;
+    public GameObject burnTextPrefab;
+    public Transform burnHolderTransform;
     public float verticalSpaceBetweenObjects;
 
     Dictionary<string, FloatingText> textObjects;
@@ -19,7 +21,7 @@ public class TextObjectManager : MonoBehaviour
     void Start()
     {
         textObjects = new Dictionary<string, FloatingText>();
-        gameTextParser = new GameTextParser(gameText);
+        gameTextParser = new GameTextParser(gameScript);
         lastText = CreateTextObject(null, false, "", gameTextParser.paragraphs[0]);
     }
 
