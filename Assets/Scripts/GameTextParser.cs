@@ -7,13 +7,16 @@ public class GameTextParser
 {
     /* Valid commands
      * 
+     * [GOTO: <id>]
+     * Reveals the part of the story tagged with the ID
+     * 
      * [MINOR_CHOICE: , , ,]
      * Choices that the player can make, comma separated
      * Each choice can end with a GOTO to designate where in the script the player should go
      *                 start with [SECRET: <item>] for it to only appear when a certain item is in the inventory
      * 
-     * [FATAL_CHOICE: , , ,]
-     * As MINOR_CHOICE, but items can be sent through time from one place to another
+     * [PERMA_CHOICE: , , ,]
+     * As MINOR_CHOICE, but items can also be sent through time from one place to another
      * Start with [TIME: <item>] to only appear when that item is added or removed through time
      * 
      * [GET: <item>]
