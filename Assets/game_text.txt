@@ -13,7 +13,7 @@ The handle is locked.
 [ROOM2] You walk through the old door and find yourself in a hallway. Old pictures are hanging on either side. They give you an uncomfortable feeling.
 [WOLF] The hairs on the back of your neck stand up. You see eyes in the darkness. The eyes move forward to reveal the form of a ferocious wolf.
 There is a hatchet on the wall near the wolf. You could probably reach it, but you might be killed before you can get off a good swing.
-[PERMA_CHOICE: Stay put [GOTO: DEATH1], Grab the hatchet [GOTO: GRAB_HATCHET], [TIME: HATCHET] Strike the wolf with your hatchet [GOTO:KILL_WOLF]]
+[MAJOR_CHOICE: Stay put [GOTO: DEATH1], Grab the hatchet [GOTO: GRAB_HATCHET], [TIME: HATCHET] Strike the wolf with your hatchet [GOTO:KILL_WOLF]]
 
 [DEATH1] You remain stationary, frozen in fear. The wolf edges closer, closer still. Finally it jumps on you, and you're [BURN: TORN LIMB FROM LIMB].
 [DEAD]
@@ -21,7 +21,7 @@ There is a hatchet on the wall near the wolf. You could probably reach it, but y
 [DEATH2] You lunge forward and manage to grab onto the hatchet.
 [GET: HATCHET]
 The wolf lunges at you.
-[PERMA_CHOICE: Swing desperately [GOTO: WOLF_DEATH_WITH_HATCHET, [TIME: HATCHET] Cower in fear [GOTO: WOLF_DEATH_WITHOUT_HATCHET]]
+[MAJOR_CHOICE: Swing desperately [GOTO: WOLF_DEATH_WITH_HATCHET, [TIME: HATCHET] Cower in fear [GOTO: WOLF_DEATH_WITHOUT_HATCHET]]
 
 [WOLF_DEATH_WITH_HATCHET] As you feared, the wolf lunges upon you before you can get a swing off. It uses its mighty canines to bite into you. You are [BURN: DEVOURED] by the wolf.
 However, you feel a strangeness. The final point where your free will mattered... could you have done something differently?

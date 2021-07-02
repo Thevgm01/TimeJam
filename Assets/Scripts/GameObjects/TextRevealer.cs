@@ -27,7 +27,7 @@ public class TextRevealer : MonoBehaviour
             timeTracker += Time.deltaTime;
             curLetterIndex = (int)Mathf.Clamp(timeTracker * lettersPerSecond, 0, tmp.text.Length);
             tmp.maxVisibleCharacters = curLetterIndex;
-            letterRevealed?.Invoke(curLetterIndex);
+            characterRevealed?.Invoke(curLetterIndex);
         }
         else
         {

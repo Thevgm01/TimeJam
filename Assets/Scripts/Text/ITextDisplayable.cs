@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ITextDisplayable
 {
-    public string GetText();
+    string GetText();
 }

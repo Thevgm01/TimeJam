@@ -15,7 +15,7 @@ public class GameTextParser
      * Each choice can end with a GOTO to designate where in the script the player should go
      *                 start with [SECRET: <item>] for it to only appear when a certain item is in the inventory
      * 
-     * [PERMA_CHOICE: , , ,]
+     * [MAJOR_CHOICE: , , ,]
      * As MINOR_CHOICE, but items can also be sent through time from one place to another
      * Start with [TIME: <item>] to only appear when that item is added or removed through time
      * 
@@ -35,32 +35,30 @@ public class GameTextParser
      * The text ID of this paragraph, a point for a GOTO to connect to
      */
 
-    public List<string> paragraphs;
-    public Dictionary<string, TextCommand> commands;
+    public Dictionary<string, TextNode> nodes;
+    public TextNode FirstNode => nodes["ORIGIN"];
 
     // Start is called before the first frame update
     public GameTextParser(TextAsset gameText)
     {
-        paragraphs = new List<string>();
-        commands = new Dictionary<string, TextCommand>();
+        nodes = new Dictionary<string, TextNode>();
 
         string[] lines = gameText.text.Split('\n');
-        for (int i = 0; i < lines.Length; ++i)
+        TextNode curNode = new TextNode(lines[0], "ORIGIN");
+        nodes[curNode.id] = curNode;
+
+        for (int i = 1; i < lines.Length; ++i)
         {
             string line = lines[i].Trim();
-            //Debug.Log(line);
+
             if (line == "")
             {
                 continue;
             }
-            if (line[0] == '[' && line[line.Length - 1] == ']')
-            {
-                commands[line] = GetCommand(line.Substring(1, line.Length - 3));
-            }
-            paragraphs.Add(line);
+            curNode = new TextNode(line, curNode);
         }
     }
-
+    /*
     private TextCommand GetCommand(string line)
     {
         string[] sections = line.Split(',');
@@ -74,5 +72,5 @@ public class GameTextParser
     public bool IsCommand(string line)
     {
         return commands[line] != null;
-    }
+    }*/
 }

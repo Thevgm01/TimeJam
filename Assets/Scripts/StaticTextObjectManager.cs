@@ -15,18 +15,9 @@ public static class StaticTextObjectManager
         }
     }
 
-    public static GameObject TextPrefab
-    {
-        get => _textObjectManager2.textPrefab;
-    }
+    public static GameObject TextPrefab => _textObjectManager2.textPrefab;
+    public static GameObject BurnPrefab => _textObjectManager2.burnTextPrefab;
+    public static Transform BurnHolderTransform => _textObjectManager2.burnHolderTransform;
 
-    public static GameObject BurnPrefab
-    {
-        get => _textObjectManager2.burnTextPrefab;
-    }
-
-    public static Transform BurnHolderTransform
-    {
-        get => _textObjectManager2.burnTextTransform;
-    }
+    public static float VerticalSpacing => _textObjectManager2.verticalSpaceBetweenObjects;
 }
