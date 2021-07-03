@@ -20,4 +20,14 @@ public class Inventory
     {
         items.Remove(item);
     }
+
+    public Inventory Clone()
+    {
+        Inventory newInventory = new Inventory();
+        foreach (string item in items)
+        {
+            newInventory.AddItem(item);
+        }
+        return newInventory;
+    }
 }

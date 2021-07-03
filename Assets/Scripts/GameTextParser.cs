@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class GameTextParser
 {
@@ -35,19 +33,19 @@ public class GameTextParser
      * The text ID of this paragraph, a point for a GOTO to connect to
      */
 
-    public Dictionary<string, TextNode> nodes;
-    public TextNode FirstNode => nodes["ORIGIN"];
+    public Dictionary<string, TextNode> namedNodes;
+    public TextNode FirstNode => namedNodes["ORIGIN"];
 
     // Start is called before the first frame update
     public GameTextParser(TextAsset gameText)
     {
-        nodes = new Dictionary<string, TextNode>();
+        namedNodes = new Dictionary<string, TextNode>();
 
         string[] lines = gameText.text.Split('\n');
-        TextNode curNode = new TextNode(lines[0], "ORIGIN");
-        nodes[curNode.id] = curNode;
+        TextNode curNode = null;
+        List<Goto> allGotos = new List<Goto>();
 
-        for (int i = 1; i < lines.Length; ++i)
+        for (int i = 0; i < lines.Length; ++i)
         {
             string line = lines[i].Trim();
 
@@ -55,8 +53,60 @@ public class GameTextParser
             {
                 continue;
             }
-            curNode = new TextNode(line, curNode);
+
+            ITextDisplayable text = null;
+            string id = "";
+
+            for (int commandStart = 0; commandStart < line.Length; ++commandStart)
+            {
+                if (line[commandStart] == '[')
+                {
+                    int commandLength = 1;
+                    while (line[commandStart + commandLength] != ']') ++commandLength;
+
+                    string command = line.Substring(commandStart + 1, commandLength - 1);
+
+                    string[] parts = command.Split(':');
+                    parts[0] = parts[0].Trim();
+                    if (parts.Length > 1) 
+                        parts[1] = parts[1].Trim();
+
+                    switch (parts[0])
+                    {
+                        case "MINOR_CHOICE": break;
+                        case "MAJOR_CHOICE": break;
+                        case "GET":
+                            text = new TextInventoryModifier(null, parts[1], TextInventoryModifier.Operation.Add);
+                            break;
+                        case "LOSE":
+                            text = new TextInventoryModifier(null, parts[1], TextInventoryModifier.Operation.Remove);
+                            break;
+                        case "GOTO": allGotos.Add(new Goto(curNode, parts[1])); break;
+                        default:
+                            id = parts[0];
+                            line = line.Substring(0, commandStart) + line.Substring(commandStart + command.Length + 2);
+                            line = line.Trim();
+                            line = line.Replace("  ", " ");
+                            break;
+                    }
+                }
+            }
+
+            if (text != null)
+                curNode = new TextNode(text, id, curNode);
+            else
+                curNode = new TextNode(line, id, curNode);
+            if (id != "")
+                namedNodes[id] = curNode;
         }
+        /*
+        foreach (Goto g in allGotos)
+        {
+            if (!namedNodes.ContainsKey(g.id))
+                Debug.LogError("Tag " + g.id + " is not defined in the game text.");
+            g.parent.child = namedNodes[g.id];
+            namedNodes[g.id].parent = g.parent;
+        }*/
     }
     /*
     private TextCommand GetCommand(string line)

@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class TextMajorChoice : TextMinorChoice
 {
+    Inventory inventory;
 
+    public TextMajorChoice(Inventory inventory)
+    {
+        this.inventory = inventory;
+    }
 }

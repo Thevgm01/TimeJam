@@ -1,6 +1,6 @@
-[START] You wake up in a room. You have no idea how you got here. All you know is that you must escape.
+[ORIGIN] You wake up in a room. You have no idea how you got here. All you know is that you must escape.
 [ROOM1] Looking around, you see a door on your left and a box in the corner of the room.
-[MINOR_CHOICE: Open the door [GOTO: DOOR1],Open the box [GOTO: BOX1]]
+[MINOR_CHOICE: Open the door [GOTO: DOOR1], Open the box [GOTO: BOX1]]
 
 [DOOR1] You walk over to the door. It is made of wood and has a metal knob. It appears to be very old.
 The handle is locked.
@@ -13,7 +13,7 @@ The handle is locked.
 [ROOM2] You walk through the old door and find yourself in a hallway. Old pictures are hanging on either side. They give you an uncomfortable feeling.
 [WOLF] The hairs on the back of your neck stand up. You see eyes in the darkness. The eyes move forward to reveal the form of a ferocious wolf.
 There is a hatchet on the wall near the wolf. You could probably reach it, but you might be killed before you can get off a good swing.
-[MAJOR_CHOICE: Stay put [GOTO: DEATH1], Grab the hatchet [GOTO: GRAB_HATCHET], [TIME: HATCHET] Strike the wolf with your hatchet [GOTO:KILL_WOLF]]
+[MAJOR_CHOICE: Stay put [GOTO: DEATH1], Grab the hatchet [GOTO: WOLF_DEATH_WITH_HATCHET], [TIME: HATCHET] Strike the wolf with your hatchet [GOTO: KILL_WOLF]]
 
 [DEATH1] You remain stationary, frozen in fear. The wolf edges closer, closer still. Finally it jumps on you, and you're [BURN: TORN LIMB FROM LIMB].
 [DEAD]

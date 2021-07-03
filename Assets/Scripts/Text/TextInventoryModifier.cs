@@ -10,6 +10,8 @@ public class TextInventoryModifier : ITextInventory, ITextDisplayable
         Remove
     }
 
+    const string style = "<i>";
+
     string item;
     Inventory inventory;
     Operation operation;
@@ -18,8 +20,8 @@ public class TextInventoryModifier : ITextInventory, ITextDisplayable
     {
         switch (operation)
         {
-            case Operation.Add: return "You have gained " + item;
-            case Operation.Remove: return "You have lost " + item;
+            case Operation.Add: return style + "You have gained " + item;
+            case Operation.Remove: return style + "You have lost " + item;
         }
         return "";
     }
