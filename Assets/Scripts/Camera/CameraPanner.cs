@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPanner : MonoBehaviour
+public class CameraPanner : MonoBehaviour, ICameraMover
 {
     Camera mainCam;
     Vector3 lastMousePosition;
@@ -36,5 +36,10 @@ public class CameraPanner : MonoBehaviour
         {
             cameraVelocity *= 1f - velocityDecay;
         }
+    }
+
+    public void MoveToPoint(Vector3 point)
+    {
+        desiredCameraPosition = point;
     }
 }

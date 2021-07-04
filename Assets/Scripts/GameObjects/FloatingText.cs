@@ -45,5 +45,9 @@ public class FloatingText : MonoBehaviour
         {
             transform.localPosition = Vector3.zero;
         }
+
+        Vector3 cameraMovePoint = transform.position + Vector3.down * dimensions.height / 2f;
+        FindObjectOfType<CameraPanner>().MoveToPoint(cameraMovePoint);
+        FindObjectOfType<CameraScroller>().MoveToPoint(cameraMovePoint);
     }
 }

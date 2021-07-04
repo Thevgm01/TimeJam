@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraScroller : MonoBehaviour
+public class CameraScroller : MonoBehaviour, ICameraMover
 {
     public float scrollWheelScale;
     public bool invertScrollDirection;
@@ -12,6 +12,7 @@ public class CameraScroller : MonoBehaviour
     Camera mainCam;
     float desiredSize;
     Vector3 mousePositionAtScroll;
+    Vector3 desiredCameraPosition;
 
     // Start is called before the first frame update
     void Awake()
@@ -37,10 +38,15 @@ public class CameraScroller : MonoBehaviour
         Vector3 originalMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
         mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, desiredSize, lerpSpeed * Time.deltaTime);
         Vector3 newMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
-        
+
         Vector3 diff = originalMouseWorld - newMouseWorld;
-        Vector3 slidePos = transform.position + diff;
-        slidePos.z = 0;
-        transform.position = slidePos;
+        desiredCameraPosition = transform.position + diff;
+        desiredCameraPosition.z = 0;
+        transform.position = desiredCameraPosition;
+    }
+
+    public void MoveToPoint(Vector3 point)
+    {
+        desiredCameraPosition = Vector3.zero;
     }
 }
