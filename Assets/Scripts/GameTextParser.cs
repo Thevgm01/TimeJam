@@ -68,26 +68,31 @@ public class GameTextParser
 
                     string[] parts = command.Split(':');
                     parts[0] = parts[0].Trim();
-                    if (parts.Length > 1) 
+                    if (parts.Length > 1)
                         parts[1] = parts[1].Trim();
 
-                    switch (parts[0])
+                    if (parts[0] == "MINOR_CHOICE" || parts[0] == "MAJOR_CHOICE")
                     {
-                        case "MINOR_CHOICE": break;
-                        case "MAJOR_CHOICE": break;
-                        case "GET":
-                            text = new TextInventoryModifier(null, parts[1], TextInventoryModifier.Operation.Add);
-                            break;
-                        case "LOSE":
-                            text = new TextInventoryModifier(null, parts[1], TextInventoryModifier.Operation.Remove);
-                            break;
-                        case "GOTO": allGotos.Add(new Goto(curNode, parts[1])); break;
-                        default:
-                            id = parts[0];
-                            line = line.Substring(0, commandStart) + line.Substring(commandStart + command.Length + 2);
-                            line = line.Trim();
-                            line = line.Replace("  ", " ");
-                            break;
+                        string[] options = parts[1].Split(',');
+                        for (int j = 0; j < options.Length; ++j)
+                            options[j] = options[j].Trim();
+
+                        allGotos.Add(new Goto(curNode, parts[1]));
+                    }
+                    else if (parts[0] == "GET" || parts[0] == "LOSE")
+                    {
+                        TextInventoryModifier.Operation op = 
+                            parts[0] == "GET" ? 
+                            TextInventoryModifier.Operation.Add : 
+                            TextInventoryModifier.Operation.Remove;
+                        text = new TextInventoryModifier(null, parts[1], op);
+                    }
+                    else
+                    {
+                        id = parts[0];
+                        line = line.Substring(0, commandStart) + line.Substring(commandStart + command.Length + 2);
+                        line = line.Trim();
+                        line = line.Replace("  ", " ");
                     }
                 }
             }
