@@ -89,6 +89,7 @@ public class GameTextParser
                 return;
             }
 
+            TextNode newNode = null;
             ITextDisplayable text = null;
             string id = "";
 
@@ -99,7 +100,7 @@ public class GameTextParser
 
                 if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    CreateChoiceNode(command.data, allGotos);
+                    newNode = CreateChoiceNode(command.data, allGotos);
                 }
                 else if (command.op == "GOTO")
                 {
@@ -130,7 +131,9 @@ public class GameTextParser
                 }
             }
 
-            if (text != null)
+            if (newNode != null)
+                curNode = newNode;
+            else if (text != null)
                 curNode = new TextNode(text, id, curNode);
             else
                 curNode = new TextNode(line, id, curNode);
