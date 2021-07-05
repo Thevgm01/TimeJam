@@ -39,7 +39,7 @@ public class FloatingText : MonoBehaviour
             }
 
             float parentHeight = ParentFT.dimensions.height;
-            transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + StaticTextObjectManager.VerticalSpacing);
+            transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + StaticTextObjectManager.Manager.verticalSpaceBetweenObjects);
         }
         else
         {

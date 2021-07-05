@@ -33,6 +33,30 @@ public class GameTextParser
      * The text ID of this paragraph, a point for a GOTO to connect to
      */
 
+    private struct Command
+    {
+        public string op;
+        public string data;
+
+        public Command(string op, string data)
+        {
+            this.op = op;
+            this.data = data;
+        }
+    }
+
+    private struct Goto
+    {
+        public TextNode parent;
+        public string destinationId;
+
+        public Goto(TextNode parent, string destinationId)
+        {
+            this.parent = parent;
+            this.destinationId = destinationId;
+        }
+    }
+
     public Dictionary<string, TextNode> namedNodes;
     public TextNode FirstNode => namedNodes["ORIGIN"];
     private string[] lines;
@@ -54,10 +78,10 @@ public class GameTextParser
                 continue;
             }
 
-            List<string> commands;
+            List<string> commandStrings;
             try
             {
-                line = ExtractCommands(line, out commands);
+                line = ExtractCommands(line, out commandStrings);
             }
             catch
             {
@@ -68,49 +92,44 @@ public class GameTextParser
             ITextDisplayable text = null;
             string id = "";
 
-            /*
-            for (int commandStart = 0; commandStart < line.Length; ++commandStart)
+            for (int j = 0; j < commandStrings.Count; ++j)
             {
-                if (line[commandStart] == '[')
+                string commandString = commandStrings[j];
+                Command command = GetCommand(commandString);
+
+                if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    int commandLength = 1;
-                    while (line[commandStart + commandLength] != ']') ++commandLength;
+                    CreateChoiceNode(command.data, allGotos);
+                }
+                else if (command.op == "GOTO")
+                {
+                    allGotos.Add(new Goto(curNode, command.data));
+                }
+                else if (command.op == "BURN")
+                {
 
-                    string command = line.Substring(commandStart + 1, commandLength - 1);
-
-                    string[] parts = command.Split(':');
-                    parts[0] = parts[0].Trim();
-                    if (parts.Length > 1)
-                        parts[1] = parts[1].Trim();
-
-                    if (parts[0] == "MINOR_CHOICE" || parts[0] == "MAJOR_CHOICE")
-                    {
-                        string[] options = parts[1].Split(',');
-                        for (int j = 0; j < options.Length; ++j)
-                            options[j] = options[j].Trim();
-                    }
-                    else if (parts[0] == "GOTO")
-                    {
-                        allGotos.Add(new Goto(curNode, parts[1]));
-                    }
-                    else if (parts[0] == "GET" || parts[0] == "LOSE")
-                    {
-                        TextInventoryModifier.Operation op = 
-                            parts[0] == "GET" ? 
-                            TextInventoryModifier.Operation.Add : 
-                            TextInventoryModifier.Operation.Remove;
-                        text = new TextInventoryModifier(null, parts[1], op);
-                    }
-                    else
-                    {
-                        id = parts[0];
-                        line = line.Substring(0, commandStart) + line.Substring(commandStart + command.Length + 2);
-                        line = line.Trim();
-                        line = line.Replace("  ", " ");
-                    }
+                }
+                else if (command.op == "GET" || command.op == "LOSE")
+                {
+                    TextInventoryModifier.Operation opType =
+                        command.op == "GET" ? TextInventoryModifier.Operation.Add :
+                        TextInventoryModifier.Operation.Remove;
+                    text = new TextInventoryModifier(null, command.data, opType);
+                }
+                else if (command.op == "DEAD")
+                {
+                    text = new TextDead();
+                }
+                else if (command.op == "ID")
+                {
+                    id = commandString;
+                }
+                else
+                {
+                    Debug.LogError("Unknown command type: " + command.op + " on line " + i + " of game text.");
                 }
             }
-            */
+
             if (text != null)
                 curNode = new TextNode(text, id, curNode);
             else
@@ -118,48 +137,96 @@ public class GameTextParser
             if (id != "")
                 namedNodes[id] = curNode;
         }
-        /*
+
         foreach (Goto g in allGotos)
         {
-            if (!namedNodes.ContainsKey(g.id))
-                Debug.LogError("Tag " + g.id + " is not defined in the game text.");
-            g.parent.child = namedNodes[g.id];
-            namedNodes[g.id].parent = g.parent;
-        }*/
+            if (!namedNodes.ContainsKey(g.destinationId))
+                Debug.LogError("Id " + g.destinationId + " is not defined in the game text.");
+            g.parent.child = namedNodes[g.destinationId];
+            namedNodes[g.destinationId].parent = g.parent;
+        }
+    }
+
+    private ChoiceNode CreateChoiceNode(string choiceCommand,  List<Goto> allGotos)
+    {
+        string[] choicesStringArray = choiceCommand.Split(' ');
+        ChoiceNode choiceNode = new ChoiceNode();
+        TextNode[] choices = new TextNode[choicesStringArray.Length];
+        for (int i = 0; i < choicesStringArray.Length; ++i)
+        {
+            string choiceString = ExtractCommands(choiceCommand, out var commands);
+            TextNode textNode = new TextNode(choiceString, "", choiceNode);
+            choiceNode.child.Add(textNode);
+
+            for (int j = 0; j < commands.Count; ++j)
+            {
+                string commandString = commands[j];
+                Command command = GetCommand(commandString);
+
+                if (command.op == "GOTO")
+                {
+                    allGotos.Add(new Goto(textNode, command.data));
+                }
+            }
+        }
+        return choiceNode;
+    }
+
+    private Command GetCommand(string command)
+    {
+        Command c;
+        if (command.Contains(":")) // Command has data that needs to be handled
+        {
+            string[] commandParts = command.Split(':');
+            c.op = commandParts[0].Trim();
+            c.data = commandParts[1].Trim();
+        }
+        else
+        {
+            c.op = "ID";
+            c.data = command;
+        }
+        return c;
     }
 
     private string ExtractCommands(string line, out List<string> commands)
     {
+        int startIndex = 0;
+        int bracketCounter = 0;
         commands = new List<string>();
-        Stack<int> leftBrackets = new Stack<int>();
         for (int i = 0; i < line.Length; ++i)
         {
             if (line[i] == '[')
             {
-                leftBrackets.Push(i);
+                ++bracketCounter;
+                startIndex = i;
             }
             else if (line[i] == ']')
             {
-                int leftIndex = leftBrackets.Pop();
-                int rightIndex = i;
-                int length = rightIndex - leftIndex;
-                string command = line.Substring(leftIndex + 1, length - 1);
-
-                if (command.StartsWith("BURN"))
+                --bracketCounter;
+                if (bracketCounter == 0)
                 {
-                    line = line.Substring(0, leftIndex) + command.Split(':')[1] + line.Substring(rightIndex + 1);
-                }
-                else
-                {
-                    line = line.Substring(0, leftIndex) + line.Substring(rightIndex + 1);
-                }
+                    int leftIndex = startIndex;
+                    int rightIndex = i;
+                    int length = rightIndex - leftIndex;
+                    string command = line.Substring(leftIndex + 1, length - 1);
 
-                commands.Add(command);
+                    if (command.StartsWith("BURN"))
+                    {
+                        line = line.Substring(0, leftIndex) + command.Split(':')[1] + line.Substring(rightIndex + 1);
+                    }
+                    else
+                    {
+                        line = line.Substring(0, leftIndex) + line.Substring(rightIndex + 1);
+                    }
+
+                    commands.Add(command);
+                }
             }
         }
-        line = line.Replace("  ", " ");
         line = line.Trim();
-        commands.Reverse();
+        while (line.Contains("  ")) 
+            line = line.Replace("  ", " ");
         return line;
     }
 }

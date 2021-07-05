@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class ChoiceNode : TextNode
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public new List<TextNode> child;
+    public new Dictionary<TextNode, FloatingText> floatingText;
 
-    // Update is called once per frame
-    void Update()
+    public ChoiceNode()
     {
-        
+        child = new List<TextNode>();
+        floatingText = new Dictionary<TextNode, FloatingText>();
     }
 }

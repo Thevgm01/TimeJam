@@ -11,6 +11,11 @@ public class TextNode
     public string id;
     public FloatingText floatingText;
 
+    protected TextNode()
+    {
+
+    }
+
     public TextNode(ITextDisplayable textItem, string id, TextNode parent)
     {
         this.textItem = textItem;

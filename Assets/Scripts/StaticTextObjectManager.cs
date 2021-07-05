@@ -5,7 +5,7 @@ using UnityEngine;
 public static class StaticTextObjectManager
 {
     private static TextObjectManager _textObjectManager;
-    private static TextObjectManager _textObjectManager2
+    public static TextObjectManager Manager
     {
         get
         {
@@ -14,10 +14,4 @@ public static class StaticTextObjectManager
             return _textObjectManager;
         }
     }
-
-    public static GameObject TextPrefab => _textObjectManager2.textPrefab;
-    public static GameObject BurnPrefab => _textObjectManager2.burnTextPrefab;
-    public static Transform BurnHolderTransform => _textObjectManager2.burnHolderTransform;
-
-    public static float VerticalSpacing => _textObjectManager2.verticalSpaceBetweenObjects;
 }
