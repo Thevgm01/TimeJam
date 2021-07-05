@@ -35,16 +35,16 @@ public class GameTextParser
 
     public Dictionary<string, TextNode> namedNodes;
     public TextNode FirstNode => namedNodes["ORIGIN"];
+    private string[] lines;
 
-    // Start is called before the first frame update
     public GameTextParser(TextAsset gameText)
     {
         namedNodes = new Dictionary<string, TextNode>();
 
-        string[] lines = gameText.text.Split('\n');
         TextNode curNode = null;
         List<Goto> allGotos = new List<Goto>();
 
+        lines = gameText.text.Split('\n');
         for (int i = 0; i < lines.Length; ++i)
         {
             string line = lines[i].Trim();
@@ -52,6 +52,17 @@ public class GameTextParser
             if (line == "")
             {
                 continue;
+            }
+
+            List<string> commands;
+            try
+            {
+                line = ExtractCommands(line, out commands);
+            }
+            catch
+            {
+                Debug.LogError("Improper command brackets on line " + i + " of game text.");
+                return;
             }
 
             ITextDisplayable text = null;
@@ -76,7 +87,9 @@ public class GameTextParser
                         string[] options = parts[1].Split(',');
                         for (int j = 0; j < options.Length; ++j)
                             options[j] = options[j].Trim();
-
+                    }
+                    else if (parts[0] == "GOTO")
+                    {
                         allGotos.Add(new Goto(curNode, parts[1]));
                     }
                     else if (parts[0] == "GET" || parts[0] == "LOSE")
@@ -113,19 +126,27 @@ public class GameTextParser
             namedNodes[g.id].parent = g.parent;
         }*/
     }
-    /*
-    private TextCommand GetCommand(string line)
-    {
-        string[] sections = line.Split(',');
 
-        if (line.StartsWith("GOTO")) return new TextCommand(TextCommand.CommandType.Goto, line.Substring(5));
-        else if (line.StartsWith("MINOR_CHOICE")) return new TextCommand(TextCommand.CommandType.MinorChoice, new ArraySegment<string>(sections, 1, sections.Length - 2).Array);
-        else if (line.StartsWith("MAJOR_CHOICE")) return new TextCommand(TextCommand.CommandType.MajorChoice, new ArraySegment<string>(sections, 1, sections.Length - 2).Array);
-        else return new TextCommand(TextCommand.CommandType.Id, line);
+    private string ExtractCommands(string line, out List<string> commands)
+    {
+        commands = new List<string>();
+        Stack<int> leftBrackets = new Stack<int>();
+        for (int i = 0; i < line.Length; ++i)
+        {
+            if (line[i] == '[')
+            {
+                leftBrackets.Push(i);
+            }
+            else if (line[i] == ']')
+            {
+                int leftIndex = leftBrackets.Pop();
+                int rightIndex = i;
+                int length = rightIndex - leftIndex;
+                string command = line.Substring(leftIndex + 1, length - 1);
+                commands.Add(command);
+            }
+        }
+        commands.Reverse();
+        return line;
     }
-
-    public bool IsCommand(string line)
-    {
-        return commands[line] != null;
-    }*/
 }

@@ -21,7 +21,7 @@ There is a hatchet on the wall near the wolf. You could probably reach it, but y
 [DEATH2] You lunge forward and manage to grab onto the hatchet.
 [GET: HATCHET]
 The wolf lunges at you.
-[MAJOR_CHOICE: Swing desperately [GOTO: WOLF_DEATH_WITH_HATCHET, [TIME: HATCHET] Cower in fear [GOTO: WOLF_DEATH_WITHOUT_HATCHET]]
+[MAJOR_CHOICE: Swing desperately [GOTO: WOLF_DEATH_WITH_HATCHET], [TIME: HATCHET] Cower in fear [GOTO: WOLF_DEATH_WITHOUT_HATCHET]]
 
 [WOLF_DEATH_WITH_HATCHET] As you feared, the wolf lunges upon you before you can get a swing off. It uses its mighty canines to bite into you. You are [BURN: DEVOURED] by the wolf.
 However, you feel a strangeness. The final point where your free will mattered... could you have done something differently?
