@@ -68,6 +68,7 @@ public class GameTextParser
             ITextDisplayable text = null;
             string id = "";
 
+            /*
             for (int commandStart = 0; commandStart < line.Length; ++commandStart)
             {
                 if (line[commandStart] == '[')
@@ -109,7 +110,7 @@ public class GameTextParser
                     }
                 }
             }
-
+            */
             if (text != null)
                 curNode = new TextNode(text, id, curNode);
             else
@@ -143,9 +144,21 @@ public class GameTextParser
                 int rightIndex = i;
                 int length = rightIndex - leftIndex;
                 string command = line.Substring(leftIndex + 1, length - 1);
+
+                if (command.StartsWith("BURN"))
+                {
+                    line = line.Substring(0, leftIndex) + command.Split(':')[1] + line.Substring(rightIndex + 1);
+                }
+                else
+                {
+                    line = line.Substring(0, leftIndex) + line.Substring(rightIndex + 1);
+                }
+
                 commands.Add(command);
             }
         }
+        line = line.Replace("  ", " ");
+        line = line.Trim();
         commands.Reverse();
         return line;
     }
