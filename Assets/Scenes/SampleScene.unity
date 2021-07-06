@@ -361,6 +361,8 @@ MonoBehaviour:
   gameScript: {fileID: 4900000, guid: 940832901faa58f4892af3175e3e312d, type: 3}
   textPrefab: {fileID: 9052803754845904994, guid: df62d750c149a98479b95ddb6ffaf524,
     type: 3}
+  choicePrefab: {fileID: 9052803754845904994, guid: 578c6bcadeb00604ca958d232f90395e,
+    type: 3}
   burnTextPrefab: {fileID: 0}
   burnHolderTransform: {fileID: 0}
   verticalSpaceBetweenObjects: 1

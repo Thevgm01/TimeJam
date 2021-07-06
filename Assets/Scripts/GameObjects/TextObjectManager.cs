@@ -6,6 +6,7 @@ public class TextObjectManager : MonoBehaviour
 {
     public TextAsset gameScript;
     public GameObject textPrefab;
+    public GameObject choicePrefab;
     public GameObject burnTextPrefab;
     public Transform burnHolderTransform;
     public float verticalSpaceBetweenObjects;
@@ -17,8 +18,7 @@ public class TextObjectManager : MonoBehaviour
     GameTextParser gameTextParser;
     int index = 1;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         textObjects = new Dictionary<string, FloatingText>();
         gameTextParser = new GameTextParser(gameScript);
@@ -26,7 +26,6 @@ public class TextObjectManager : MonoBehaviour
         curNode = gameTextParser.FirstNode;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
