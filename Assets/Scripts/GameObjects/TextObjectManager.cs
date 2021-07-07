@@ -30,9 +30,12 @@ public class TextObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            CreateTextObject(curNode, true);
-            curNode = curNode.child;
-            ++index;
+            if (!(curNode is ChoiceNode))
+            {
+                CreateTextObject(curNode, true);
+                curNode = curNode.child;
+                ++index;
+            }
         }
     }
 
@@ -44,7 +47,6 @@ public class TextObjectManager : MonoBehaviour
         FloatingText ft = newTextObject.GetComponent<FloatingText>();
         ft.node = node;
         ft.fixedToParent = fixedToParent;
-
         node.floatingText = ft;
     }
 }

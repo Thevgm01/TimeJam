@@ -12,6 +12,7 @@ public class TextRevealer : MonoBehaviour
     float timeTracker = 0;
     int curLetterIndex = 0;
     public Action<int> characterRevealed = delegate { };
+    public Action finishedRevealing;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class TextRevealer : MonoBehaviour
         }
         else
         {
+            finishedRevealing?.Invoke();
             Destroy(this);
         }
     }

@@ -45,18 +45,6 @@ public class GameTextParser
         }
     }
 
-    private struct Goto
-    {
-        public TextNode parent;
-        public string destinationId;
-
-        public Goto(TextNode parent, string destinationId)
-        {
-            this.parent = parent;
-            this.destinationId = destinationId;
-        }
-    }
-
     public Dictionary<string, TextNode> namedNodes;
     public TextNode FirstNode => namedNodes["ORIGIN"];
     private string[] lines;
@@ -66,7 +54,7 @@ public class GameTextParser
         namedNodes = new Dictionary<string, TextNode>();
 
         TextNode curNode = null;
-        List<Goto> allGotos = new List<Goto>();
+        Dictionary<TextNode, string> gotos = new Dictionary<TextNode, string>();
 
         lines = gameText.text.Split('\n');
         for (int i = 0; i < lines.Length; ++i)
@@ -100,11 +88,11 @@ public class GameTextParser
 
                 if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    newNode = CreateChoiceNode(command.data, allGotos);
+                    newNode = CreateChoiceNode(command.data, gotos);
                 }
                 else if (command.op == "GOTO")
                 {
-                    allGotos.Add(new Goto(curNode, command.data));
+                    gotos[curNode] = command.data;
                 }
                 else if (command.op == "BURN")
                 {
@@ -137,27 +125,29 @@ public class GameTextParser
                 curNode = new TextNode(text, id, curNode);
             else
                 curNode = new TextNode(line, id, curNode);
+
             if (id != "")
                 namedNodes[id] = curNode;
         }
 
-        foreach (Goto g in allGotos)
+        foreach (KeyValuePair<TextNode, string> kvp in gotos)
         {
-            if (!namedNodes.ContainsKey(g.destinationId))
-                Debug.LogError("Id " + g.destinationId + " is not defined in the game text.");
-            g.parent.child = namedNodes[g.destinationId];
-            namedNodes[g.destinationId].parent = g.parent;
+            //Debug.Log("Linking \"" + g.parent.Text + "\" to " + g.destinationId);
+            if (!namedNodes.ContainsKey(kvp.Value))
+                Debug.LogError("Id " + kvp.Value + " is not defined in the game text.");
+            kvp.Key.parent.child = namedNodes[kvp.Value];
+            //namedNodes[kvp.Value].parent = kvp.Key;
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand,  List<Goto> allGotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand,  Dictionary<TextNode, string> gotos)
     {
-        string[] choicesStringArray = choiceCommand.Split(' ');
+        string[] choicesStringArray = choiceCommand.Split(',');
         ChoiceNode choiceNode = new ChoiceNode();
         TextNode[] choices = new TextNode[choicesStringArray.Length];
         for (int i = 0; i < choicesStringArray.Length; ++i)
         {
-            string choiceString = ExtractCommands(choiceCommand, out var commands);
+            string choiceString = ExtractCommands(choicesStringArray[i], out var commands);
             TextNode textNode = new TextNode(choiceString, "", choiceNode);
             choiceNode.child.Add(textNode);
 
@@ -168,7 +158,7 @@ public class GameTextParser
 
                 if (command.op == "GOTO")
                 {
-                    allGotos.Add(new Goto(textNode, command.data));
+                    gotos[textNode] = command.data;
                 }
             }
         }
@@ -180,9 +170,9 @@ public class GameTextParser
         Command c;
         if (command.Contains(":")) // Command has data that needs to be handled
         {
-            string[] commandParts = command.Split(':');
-            c.op = commandParts[0].Trim();
-            c.data = commandParts[1].Trim();
+            int index = command.IndexOf(":");
+            c.op = command.Substring(0, index).Trim();
+            c.data = command.Substring(index + 1).Trim();
         }
         else
         {
@@ -194,7 +184,7 @@ public class GameTextParser
 
     private string ExtractCommands(string line, out List<string> commands)
     {
-        int startIndex = 0;
+        int startIndex = -1;
         int bracketCounter = 0;
         commands = new List<string>();
         for (int i = 0; i < line.Length; ++i)
@@ -202,7 +192,10 @@ public class GameTextParser
             if (line[i] == '[')
             {
                 ++bracketCounter;
-                startIndex = i;
+                if (startIndex < 0)
+                {
+                    startIndex = i;
+                }
             }
             else if (line[i] == ']')
             {
@@ -224,6 +217,7 @@ public class GameTextParser
                     }
 
                     commands.Add(command);
+                    startIndex = -1;
                 }
             }
         }

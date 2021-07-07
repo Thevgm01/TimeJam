@@ -9,11 +9,6 @@ public class FloatingText : MonoBehaviour
     public bool fixedToParent = true;
     public Rect dimensions;
 
-    void Awake()
-    {
-        dimensions = GetComponent<RectTransform>().rect;
-    }
-
     void Start()
     {
         StartCoroutine("Initialize");

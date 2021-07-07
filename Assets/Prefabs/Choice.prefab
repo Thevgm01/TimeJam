@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9052803754845904992}
   - component: {fileID: 9052803754845904995}
   - component: {fileID: 9052803754845904999}
+  - component: {fileID: 8990301787177543242}
   m_Layer: 0
   m_Name: Choice
   m_TagString: Untagged
@@ -224,3 +225,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!65 &8990301787177543242
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052803754845904994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.0981097, y: 0.5645553, z: 0}
+  m_Center: {x: 0.020398855, y: -0.28227764, z: 0}
