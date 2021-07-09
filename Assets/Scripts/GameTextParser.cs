@@ -53,7 +53,7 @@ public class GameTextParser
     {
         namedNodes = new Dictionary<string, TextNode>();
 
-        TextNode curNode = null;
+        INode curNode = null;
         Dictionary<TextNode, string> gotos = new Dictionary<TextNode, string>();
 
         lines = gameText.text.Split('\n');
@@ -77,7 +77,7 @@ public class GameTextParser
                 return;
             }
 
-            TextNode newNode = null;
+            ChoiceNode choiceNode = null;
             ITextDisplayable text = null;
             string id = "";
 
@@ -88,11 +88,11 @@ public class GameTextParser
 
                 if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    newNode = CreateChoiceNode(command.data, gotos);
+                    choiceNode = CreateChoiceNode(command.data, gotos);
                 }
                 else if (command.op == "GOTO")
                 {
-                    gotos[curNode] = command.data;
+                    gotos[(TextNode)curNode] = command.data;
                 }
                 else if (command.op == "BURN")
                 {
@@ -119,8 +119,8 @@ public class GameTextParser
                 }
             }
 
-            if (newNode != null)
-                curNode = newNode;
+            if (choiceNode != null)
+                curNode = choiceNode;
             else if (text != null)
                 curNode = new TextNode(text, id, curNode);
             else
@@ -149,7 +149,7 @@ public class GameTextParser
         {
             string choiceString = ExtractCommands(choicesStringArray[i], out var commands);
             TextNode textNode = new TextNode(choiceString, "", choiceNode);
-            choiceNode.child.Add(textNode);
+            choiceNode.children.Add(textNode);
 
             for (int j = 0; j < commands.Count; ++j)
             {

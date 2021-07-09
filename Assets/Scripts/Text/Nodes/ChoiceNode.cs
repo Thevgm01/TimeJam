@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChoiceNode : TextNode
+public class ChoiceNode : BaseNode
 {
-    public new List<TextNode> child;
-    public new Dictionary<TextNode, FloatingText> floatingText;
+    public INode parent;
+    public List<INode> children;
+    public Dictionary<INode, FloatingText> floatingText;
 
     public ChoiceNode()
     {
-        child = new List<TextNode>();
-        floatingText = new Dictionary<TextNode, FloatingText>();
+        children = new List<INode>();
+        floatingText = new Dictionary<INode, FloatingText>();
     }
 }

@@ -2,21 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextNode
+public class TextNode : BaseNode
 {
     ITextDisplayable textItem;
     public string Text => textItem.GetText();
-    public TextNode parent;
-    public TextNode child;
+    public INode parent;
+    public INode child;
     public string id;
     public FloatingText floatingText;
 
-    protected TextNode()
-    {
-
-    }
-
-    public TextNode(ITextDisplayable textItem, string id, TextNode parent)
+    public TextNode(ITextDisplayable textItem, string id, INode parent)
     {
         this.textItem = textItem;
         this.id = id;
@@ -27,5 +22,5 @@ public class TextNode
         }
     }
 
-    public TextNode(string text, string id, TextNode parent) : this(new TextStory(text), id, parent) { }
+    public TextNode(string text, string id, INode parent) : this(new TextStory(text), id, parent) { }
 }

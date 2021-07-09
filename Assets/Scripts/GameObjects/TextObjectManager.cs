@@ -30,23 +30,36 @@ public class TextObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!(curNode is ChoiceNode))
-            {
-                CreateTextObject(curNode, true);
-                curNode = curNode.child;
-                ++index;
-            }
+            curNode = CreateText(curNode);
+            ++index;
         }
     }
 
-    void CreateTextObject(TextNode node, bool fixedToParent)
+    TextNode CreateText(TextNode node)
+    {
+        if (node is ChoiceNode) return InstantiateChoiceObject((ChoiceNode)node);
+        else return InstantiateTextObject(node);
+    }
+
+    TextNode InstantiateChoiceObject(ChoiceNode node)
+    {
+        for (int i = 0; i < node.children.Count; ++i)
+        {
+            TextNode choice = node.children[i];
+            InstantiateTextObject(choice);
+        }
+        return node.children[0];
+    }
+
+    TextNode InstantiateTextObject(TextNode node)
     {
         GameObject newTextObject = Instantiate(textPrefab);
         newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
 
         FloatingText ft = newTextObject.GetComponent<FloatingText>();
         ft.node = node;
-        ft.fixedToParent = fixedToParent;
+        ft.fixedToParent = false;
         node.floatingText = ft;
+        return node.child;
     }
 }
