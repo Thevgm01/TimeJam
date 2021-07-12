@@ -77,7 +77,7 @@ public class GameTextParser
                 return;
             }
 
-            ChoiceNode choiceNode = null;
+            INode newNode = null;
             ITextDisplayable text = null;
             string id = "";
 
@@ -88,7 +88,7 @@ public class GameTextParser
 
                 if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    choiceNode = CreateChoiceNode(command.data, gotos);
+                    newNode = CreateChoiceNode(command.data, curNode, gotos);
                 }
                 else if (command.op == "GOTO")
                 {
@@ -119,15 +119,20 @@ public class GameTextParser
                 }
             }
 
-            if (choiceNode != null)
-                curNode = (INode)choiceNode;
-            else if (text != null)
-                curNode = (INode)new TextNode(text, id, curNode);
-            else
-                curNode = (INode)new TextNode(line, id, curNode);
+            if (newNode == null) {
+                if (text != null)
+                    newNode = new TextNode(text, id, curNode);
+                else
+                    newNode = new TextNode(line, id, curNode);
+            }
 
             if (id != "")
-                namedNodes[id] = curNode;
+                namedNodes[id] = newNode;
+
+            if (curNode != null)
+                curNode.SetChild(newNode);
+
+            curNode = newNode;
         }
 
         foreach (KeyValuePair<TextNode, string> kvp in gotos)
@@ -140,11 +145,10 @@ public class GameTextParser
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand,  Dictionary<TextNode, string> gotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand, INode curNode, Dictionary<TextNode, string> gotos)
     {
         string[] choicesStringArray = choiceCommand.Split(',');
         ChoiceNode choiceNode = new ChoiceNode();
-        TextNode[] choices = new TextNode[choicesStringArray.Length];
         for (int i = 0; i < choicesStringArray.Length; ++i)
         {
             string choiceString = ExtractCommands(choicesStringArray[i], out var commands);

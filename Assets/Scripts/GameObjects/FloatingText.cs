@@ -28,7 +28,7 @@ public class FloatingText : MonoBehaviour
         yield return null;
         dimensions = GetComponent<RectTransform>().rect; // Allow time for the content size fitter to change values
 
-        if (node.parent != null)
+        if (ParentFT != null)
         {
             if (fixedToParent)
             {
