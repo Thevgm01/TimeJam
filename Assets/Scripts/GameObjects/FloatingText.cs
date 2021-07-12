@@ -14,19 +14,15 @@ public class FloatingText : MonoBehaviour
         }    
     }
     public bool fixedToParent = true;
-    public Rect dimensions;
+
+    private TMPro.TextMeshPro tmp;
+    public Vector2 Dimensions => new Vector2(tmp.preferredWidth, tmp.preferredHeight);
 
     void Start()
     {
-        StartCoroutine("Initialize");
-    }
-
-    IEnumerator Initialize()
-    {
-        TMPro.TextMeshPro tmp = GetComponent<TMPro.TextMeshPro>();
+        tmp = GetComponent<TMPro.TextMeshPro>();
         tmp.text = node.Text;
-        yield return null;
-        dimensions = GetComponent<RectTransform>().rect; // Allow time for the content size fitter to change values
+        tmp.ForceMeshUpdate();
 
         if (ParentFT != null)
         {
@@ -40,7 +36,7 @@ public class FloatingText : MonoBehaviour
                 transform.SetParent(firstUnfixedParent.transform, false);
             }
 
-            float parentHeight = ParentFT.dimensions.height;
+            float parentHeight = ParentFT.Dimensions.y;
             transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + StaticTextObjectManager.Manager.verticalSpaceBetweenObjects);
         }
         else
@@ -48,7 +44,7 @@ public class FloatingText : MonoBehaviour
             transform.localPosition = Vector3.zero;
         }
 
-        Vector3 cameraMovePoint = transform.position + Vector3.down * dimensions.height / 2f;
+        Vector3 cameraMovePoint = transform.position + Vector3.down * Dimensions.y / 2f;
         FindObjectOfType<CameraPanner>().MoveToPoint(cameraMovePoint);
         FindObjectOfType<CameraScroller>().MoveToPoint(cameraMovePoint);
     }
