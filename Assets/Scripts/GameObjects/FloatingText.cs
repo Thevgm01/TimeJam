@@ -12,7 +12,7 @@ public class FloatingText : MonoBehaviour
                 return ((TextNode)node.parent).floatingText;
             return null;
         }    
-    } 
+    }
     public bool fixedToParent = true;
     public Rect dimensions;
 

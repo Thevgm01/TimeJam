@@ -14,9 +14,9 @@ public class TextObjectManager : MonoBehaviour
     Dictionary<string, FloatingText> textObjects;
 
     INode curNode;
+    IEnumerator choiceObjectsInstantiator;
 
     GameTextParser gameTextParser;
-    int index = 1;
 
     void Awake()
     {
@@ -28,27 +28,36 @@ public class TextObjectManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && curNode is TextNode)
         {
-            curNode = CreateText(curNode);
-            ++index;
+            INode newNode = InstantiateTextObject((TextNode)curNode);
+
+            if (newNode is ChoiceNode)
+            {
+                FloatingText parentFT = ((TextNode)curNode).floatingText;
+                TextRevealer parentRevealer = parentFT.GetComponent<TextRevealer>();
+
+                choiceObjectsInstantiator = InstantiateChoiceObject((ChoiceNode)newNode);
+                parentRevealer.finishedRevealing += StartInstantiatingChoiceObjects;
+            }
+
+            curNode = newNode;
         }
     }
 
-    INode CreateText(INode node)
+    void StartInstantiatingChoiceObjects()
     {
-        if (node is ChoiceNode) return InstantiateChoiceObject((ChoiceNode)node);
-        else return InstantiateTextObject((TextNode)node);
+        StartCoroutine(choiceObjectsInstantiator);
     }
 
-    INode InstantiateChoiceObject(ChoiceNode node)
+    IEnumerator InstantiateChoiceObject(ChoiceNode node)
     {
         for (int i = 0; i < node.children.Count; ++i)
         {
             TextNode choice = (TextNode)node.children[i];
             InstantiateTextObject(choice);
+            yield return new WaitForSeconds(0.2f);
         }
-        return node.children[0];
     }
 
     INode InstantiateTextObject(TextNode node)

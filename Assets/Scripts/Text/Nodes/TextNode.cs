@@ -10,6 +10,7 @@ public class TextNode : INode
     public INode child;
     public string id;
     public FloatingText floatingText;
+    public int timeline;
 
     public TextNode(ITextDisplayable textItem, string id, INode parent)
     {
