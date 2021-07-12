@@ -5,7 +5,14 @@ using UnityEngine;
 public class FloatingText : MonoBehaviour
 {
     public TextNode node;
-    public FloatingText ParentFT => node.parent != null ? node.parent.floatingText : null;
+    public FloatingText ParentFT {
+        get
+        {
+            if (node != null && node.parent != null && node.parent is TextNode)
+                return ((TextNode)node.parent).floatingText;
+            return null;
+        }    
+    } 
     public bool fixedToParent = true;
     public Rect dimensions;
 

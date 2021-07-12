@@ -13,7 +13,7 @@ public class TextObjectManager : MonoBehaviour
 
     Dictionary<string, FloatingText> textObjects;
 
-    TextNode curNode;
+    INode curNode;
 
     GameTextParser gameTextParser;
     int index = 1;
@@ -35,23 +35,23 @@ public class TextObjectManager : MonoBehaviour
         }
     }
 
-    TextNode CreateText(TextNode node)
+    INode CreateText(INode node)
     {
         if (node is ChoiceNode) return InstantiateChoiceObject((ChoiceNode)node);
-        else return InstantiateTextObject(node);
+        else return InstantiateTextObject((TextNode)node);
     }
 
-    TextNode InstantiateChoiceObject(ChoiceNode node)
+    INode InstantiateChoiceObject(ChoiceNode node)
     {
         for (int i = 0; i < node.children.Count; ++i)
         {
-            TextNode choice = node.children[i];
+            TextNode choice = (TextNode)node.children[i];
             InstantiateTextObject(choice);
         }
         return node.children[0];
     }
 
-    TextNode InstantiateTextObject(TextNode node)
+    INode InstantiateTextObject(TextNode node)
     {
         GameObject newTextObject = Instantiate(textPrefab);
         newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));

@@ -45,13 +45,13 @@ public class GameTextParser
         }
     }
 
-    public Dictionary<string, TextNode> namedNodes;
-    public TextNode FirstNode => namedNodes["ORIGIN"];
+    public Dictionary<string, INode> namedNodes;
+    public INode FirstNode => namedNodes["ORIGIN"];
     private string[] lines;
 
     public GameTextParser(TextAsset gameText)
     {
-        namedNodes = new Dictionary<string, TextNode>();
+        namedNodes = new Dictionary<string, INode>();
 
         INode curNode = null;
         Dictionary<TextNode, string> gotos = new Dictionary<TextNode, string>();
@@ -120,11 +120,11 @@ public class GameTextParser
             }
 
             if (choiceNode != null)
-                curNode = choiceNode;
+                curNode = (INode)choiceNode;
             else if (text != null)
-                curNode = new TextNode(text, id, curNode);
+                curNode = (INode)new TextNode(text, id, curNode);
             else
-                curNode = new TextNode(line, id, curNode);
+                curNode = (INode)new TextNode(line, id, curNode);
 
             if (id != "")
                 namedNodes[id] = curNode;
@@ -135,7 +135,7 @@ public class GameTextParser
             //Debug.Log("Linking \"" + g.parent.Text + "\" to " + g.destinationId);
             if (!namedNodes.ContainsKey(kvp.Value))
                 Debug.LogError("Id " + kvp.Value + " is not defined in the game text.");
-            kvp.Key.parent.child = namedNodes[kvp.Value];
+            kvp.Key.parent.SetChild(namedNodes[kvp.Value]);
             //namedNodes[kvp.Value].parent = kvp.Key;
         }
     }
