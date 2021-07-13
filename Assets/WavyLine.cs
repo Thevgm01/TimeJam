@@ -64,6 +64,9 @@ public class WavyLine : MonoBehaviour
 
     void ApplyNoise()
     {
+        if (!lr.isVisible)
+            return;
+
         if (noise == null)
             noise = new Noise();
 
