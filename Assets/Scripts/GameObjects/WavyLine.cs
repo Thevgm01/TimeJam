@@ -12,11 +12,13 @@ public class WavyLine : MonoBehaviour
     public float resolutionPerUnit;
     float lastLength = 0;
 
+    [Header("Noise")]
     [Range(0, 10)] public float amplitude = 10f;
     [Range(0, 1)] public float frequency = 1f;
     [Range(-5, 5)] public float speed = 1f;
     [Range(-5, 5)] public float textureSpeed = 1f;
     public AnimationCurve noiseScaleOverLength;
+    float noiseTimeTracker = 0;
 
     Vector3[] basePositions;
 
@@ -29,6 +31,7 @@ public class WavyLine : MonoBehaviour
         noise = new Noise();
 
         lr = GetComponent<LineRenderer>();
+        lr.sharedMaterial.mainTextureOffset = Vector2.zero;
     }
 
     // Update is called once per frame
@@ -71,20 +74,19 @@ public class WavyLine : MonoBehaviour
         if (noise == null)
             noise = new Noise();
 
+        noiseTimeTracker += Time.deltaTime * speed;
         for (int i = 0; i < basePositions.Length; i++)
         {
             float frac = (float)i / (basePositions.Length - 1);
             float curveScale = noiseScaleOverLength.Evaluate(frac);
-
-            float time = Time.time;
 
             Vector3 point = basePositions[i];
             Vector3 offset = new Vector3();
 
             float length = point.magnitude * frequency;
 
-            offset.x += noise.Evaluate(new Vector3(length + time * speed, 0, 0));
-            offset.y += noise.Evaluate(new Vector3(0, length + time * speed, 0));
+            offset.x += noise.Evaluate(new Vector3(length + noiseTimeTracker, 0, 0));
+            offset.y += noise.Evaluate(new Vector3(0, length + noiseTimeTracker, 0));
 
             offset = offset * 2 - new Vector3(1, 1, 0);
             offset = offset * amplitude * curveScale;
