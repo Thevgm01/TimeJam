@@ -14,6 +14,7 @@ public class WavyLine : MonoBehaviour
 
     [Range(0, 10)] public float amplitude = 10f;
     [Range(0, 1)] public float frequency = 1f;
+    [Range(-5, 5)] public float speed = 1f;
     public AnimationCurve noiseScaleOverLength;
 
     Vector3[] basePositions;
@@ -82,8 +83,8 @@ public class WavyLine : MonoBehaviour
 
             float length = point.magnitude * frequency;
 
-            offset.x += noise.Evaluate(new Vector3(length - time - seed, seed, 0));
-            offset.y += noise.Evaluate(new Vector3(seed, length - time - seed, 0));
+            offset.x += noise.Evaluate(new Vector3(length + time * speed - seed, seed, 0));
+            offset.y += noise.Evaluate(new Vector3(seed, length + time * speed - seed, 0));
 
             offset = offset * 2 - new Vector3(1, 1, 0);
             offset = offset * amplitude * curveScale;
