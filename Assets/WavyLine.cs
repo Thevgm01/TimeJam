@@ -15,11 +15,13 @@ public class WavyLine : MonoBehaviour
     [Range(0, 10)] public float amplitude = 10f;
     [Range(0, 1)] public float frequency = 1f;
     [Range(-5, 5)] public float speed = 1f;
+    [Range(-5, 5)] public float textureSpeed = 1f;
     public AnimationCurve noiseScaleOverLength;
 
     Vector3[] basePositions;
 
     LineRenderer lr;
+    Material mat;
 
     // Start is called before the first frame update
     void Awake()
@@ -34,6 +36,7 @@ public class WavyLine : MonoBehaviour
     {
         SetBasePositions();
         ApplyNoise();
+        ScrollTexture();
     }
 
     void SetBasePositions()
@@ -87,5 +90,10 @@ public class WavyLine : MonoBehaviour
             offset = offset * amplitude * curveScale;
             lr.SetPosition(i, transform.position + point + offset);
         }
+    }
+
+    void ScrollTexture()
+    {
+        lr.sharedMaterial.mainTextureOffset += Vector2.right * textureSpeed * Time.deltaTime;
     }
 }
