@@ -20,8 +20,6 @@ public class WavyLine : MonoBehaviour
     Vector3[] basePositions;
 
     LineRenderer lr;
-    float factor = 0.5f;
-    float seed;
 
     // Start is called before the first frame update
     void Awake()
@@ -29,7 +27,6 @@ public class WavyLine : MonoBehaviour
         noise = new Noise();
 
         lr = GetComponent<LineRenderer>();
-        seed = Random.Range(0f, 100000f);
     }
 
     // Update is called once per frame
@@ -83,8 +80,8 @@ public class WavyLine : MonoBehaviour
 
             float length = point.magnitude * frequency;
 
-            offset.x += noise.Evaluate(new Vector3(length + time * speed - seed, seed, 0));
-            offset.y += noise.Evaluate(new Vector3(seed, length + time * speed - seed, 0));
+            offset.x += noise.Evaluate(new Vector3(length + time * speed, 0, 0));
+            offset.y += noise.Evaluate(new Vector3(0, length + time * speed, 0));
 
             offset = offset * 2 - new Vector3(1, 1, 0);
             offset = offset * amplitude * curveScale;
