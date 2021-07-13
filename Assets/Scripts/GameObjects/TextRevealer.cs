@@ -15,6 +15,9 @@ public class TextRevealer : MonoBehaviour
     public Action<int> characterRevealed = delegate { };
     public Action finishedRevealing;
 
+    TMPro.TextMeshPro revealerTmp;
+    TextObjectManager tom;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,7 @@ public class TextRevealer : MonoBehaviour
         tmp.maxVisibleCharacters = 0;
 
         revealerCharacter = Instantiate(revealerCharacter);
+        revealerTmp = revealerCharacter.GetComponent<TMPro.TextMeshPro>();
     }
 
     void Update()
@@ -33,7 +37,7 @@ public class TextRevealer : MonoBehaviour
             tmp.maxVisibleCharacters = curLetterIndex;
 
             if (curLetterIndex < tmp.text.Length)
-                StaticTextObjectManager.Manager.MatchCharacterPositions(tmp, curLetterIndex, revealerCharacter.GetComponent<TMPro.TextMeshPro>(), 0);
+                StaticTextObjectManager.Manager.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
             else
                 Destroy(revealerCharacter);
 
