@@ -337,7 +337,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -359,27 +359,28 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0.9333024, y: 0.5057938, z: -0.21195482}
-  - {x: 1.3232536, y: 0.8613623, z: -0.42390963}
-  - {x: 2.0698957, y: 0.6050831, z: -0.63586444}
-  - {x: 2.313967, y: 0.7230208, z: -0.84781927}
-  - {x: 2.6998882, y: 0.97955525, z: -1.059774}
-  - {x: 3.2478719, y: 0.946079, z: -1.2717289}
-  - {x: 3.6155667, y: 1.1338934, z: -1.4836836}
-  - {x: 4.1885386, y: 0.9927335, z: -1.6956385}
-  - {x: 4.420952, y: 1.0792911, z: -1.9075933}
-  - {x: 4.9836206, y: 1.420582, z: -2.119548}
-  - {x: 5.5338078, y: 1.4503105, z: -2.331503}
-  - {x: 5.9320345, y: 1.4800574, z: -2.5434577}
-  - {x: 6.3378725, y: 1.5211122, z: -2.7554123}
-  - {x: 6.7566085, y: 1.5525862, z: -2.9673672}
-  - {x: 7.1797295, y: 1.670086, z: -3.1793222}
-  - {x: 7.72231, y: 1.8308134, z: -3.391277}
-  - {x: 8.263553, y: 2.0947726, z: -3.603232}
-  - {x: 8.867067, y: 1.8807343, z: -3.8151865}
-  - {x: 9.008106, y: 2.03351, z: -4.027141}
-  - {x: 9.21, y: 1.81, z: -4.239096}
+  - {x: -9.68, y: 1.7, z: 0}
+  - {x: -8.754673, y: 2.3974004, z: -0.19679844}
+  - {x: -7.9066463, y: 3.1287575, z: -0.3935969}
+  - {x: -7.313819, y: 3.7765846, z: -0.59039533}
+  - {x: -6.8255773, y: 4.392823, z: -0.7871938}
+  - {x: -6.4239492, y: 4.9658103, z: -0.9839922}
+  - {x: -6.0780764, y: 5.47167, z: -1.1807907}
+  - {x: -5.772908, y: 5.9286304, z: -1.3775891}
+  - {x: -5.4795127, y: 6.323698, z: -1.5743876}
+  - {x: -5.195552, y: 6.6836157, z: -1.771186}
+  - {x: -4.9110794, y: 7.0175, z: -1.9679844}
+  - {x: -4.6110744, y: 7.314374, z: -2.164783}
+  - {x: -4.313921, y: 7.5928955, z: -2.3615813}
+  - {x: -4.0407653, y: 7.8274894, z: -2.5583797}
+  - {x: -3.8185706, y: 8.055567, z: -2.755178}
+  - {x: -3.6739724, y: 8.245927, z: -2.9519763}
+  - {x: -3.621472, y: 8.4315605, z: -3.1487746}
+  - {x: -3.677588, y: 8.62145, z: -3.345573}
+  - {x: -3.7905264, y: 8.851393, z: -3.5423713}
+  - {x: -3.9305332, y: 9.1089115, z: -3.7391696}
+  - {x: -4.0876703, y: 9.340105, z: -3.935968}
+  - {x: -3.93, y: 9.76, z: -4.239096}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -449,6 +450,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {fileID: 1763591195}
   resolutionPerUnit: 0.5
+  scale: 5
+  noiseScaleOverLength:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 5.8999996
+      outSlope: 5.8999996
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1
+      value: 0.59
+      inSlope: 3.4624999
+      outSlope: 3.4624999
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 0.59
+      inSlope: -3.4624991
+      outSlope: -3.4624991
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -5.899998
+      outSlope: -5.899998
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &1524107694
 Transform:
   m_ObjectHideFlags: 0
@@ -457,7 +510,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524107691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -9.68, y: 1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -487,7 +540,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763591194}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.21, y: 1.81, z: -4.239096}
+  m_LocalPosition: {x: -3.93, y: 9.76, z: -4.239096}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
