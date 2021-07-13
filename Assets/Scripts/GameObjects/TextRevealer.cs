@@ -6,6 +6,7 @@ using System;
 public class TextRevealer : MonoBehaviour
 {
     TMPro.TextMeshPro tmp;
+    public GameObject revealerCharacter;
 
     public float lettersPerSecond = 50f;
 
@@ -19,6 +20,8 @@ public class TextRevealer : MonoBehaviour
     {
         tmp = GetComponent<TMPro.TextMeshPro>();
         tmp.maxVisibleCharacters = 0;
+
+        revealerCharacter = Instantiate(revealerCharacter);
     }
 
     void Update()
@@ -28,6 +31,12 @@ public class TextRevealer : MonoBehaviour
             timeTracker += Time.deltaTime;
             curLetterIndex = (int)Mathf.Clamp(timeTracker * lettersPerSecond, 0, tmp.text.Length);
             tmp.maxVisibleCharacters = curLetterIndex;
+
+            if (curLetterIndex < tmp.text.Length)
+                StaticTextObjectManager.Manager.MatchCharacterPositions(tmp, curLetterIndex, revealerCharacter.GetComponent<TMPro.TextMeshPro>(), 0);
+            else
+                Destroy(revealerCharacter);
+
             characterRevealed?.Invoke(curLetterIndex);
         }
         else

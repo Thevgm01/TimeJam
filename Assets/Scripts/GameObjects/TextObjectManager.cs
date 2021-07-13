@@ -71,4 +71,13 @@ public class TextObjectManager : MonoBehaviour
         node.floatingText = ft;
         return node.child;
     }
+
+    public void MatchCharacterPositions(TMPro.TextMeshPro source, int sourceIndex, TMPro.TextMeshPro item, int itemIndex)
+    {
+        var sourceCharInfo = source.textInfo.characterInfo[sourceIndex];
+        var itemCharInfo = item.textInfo.characterInfo[itemIndex];
+        Vector3 sourceCharPos = new Vector3(sourceCharInfo.origin, sourceCharInfo.baseLine);
+        Vector3 itemCharPos = new Vector3(itemCharInfo.origin, itemCharInfo.baseLine);
+        item.transform.position = source.transform.position + sourceCharPos - itemCharPos;
+    }
 }
