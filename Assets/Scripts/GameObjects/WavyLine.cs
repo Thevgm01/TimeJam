@@ -90,7 +90,7 @@ public class WavyLine : MonoBehaviour
 
             offset = offset * 2 - new Vector3(1, 1, 0);
             offset = offset * amplitude * curveScale;
-            lr.SetPosition(i, transform.position + point + offset);
+            lr.SetPosition(i, point + offset);
         }
     }
 
