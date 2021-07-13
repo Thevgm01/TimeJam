@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
+[ExecuteAlways]
 public class WavyLine : MonoBehaviour
 {
     Noise noise;
@@ -11,8 +12,8 @@ public class WavyLine : MonoBehaviour
     public float resolutionPerUnit;
     float lastLength = 0;
 
-    public float amplitude = 10f;
-    public float frequency = 1f;
+    [Range(0, 10)] public float amplitude = 10f;
+    [Range(0, 1)] public float frequency = 1f;
     public AnimationCurve noiseScaleOverLength;
 
     Vector3[] basePositions;
@@ -44,8 +45,8 @@ public class WavyLine : MonoBehaviour
         {
             int numPositions = Mathf.RoundToInt(length / resolutionPerUnit);
             basePositions = new Vector3[numPositions];
-            basePositions[0] = transform.position;
-            basePositions[numPositions - 1] = destination.position;
+            basePositions[0] = Vector3.zero;
+            basePositions[numPositions - 1] = destination.position - transform.position;
 
             Vector3 diff = destination.position - transform.position;
             Vector3 resolutionDiff = diff.normalized * resolutionPerUnit;
@@ -63,7 +64,10 @@ public class WavyLine : MonoBehaviour
 
     void ApplyNoise()
     {
-        for (int i = 1; i < basePositions.Length - 1; i++)
+        if (noise == null)
+            noise = new Noise();
+
+        for (int i = 0; i < basePositions.Length; i++)
         {
             float frac = (float)i / (basePositions.Length - 1);
             float curveScale = noiseScaleOverLength.Evaluate(frac);
@@ -71,15 +75,16 @@ public class WavyLine : MonoBehaviour
             float time = Time.time;
 
             Vector3 point = basePositions[i];
-            float length = point.magnitude / frequency;
-
             Vector3 offset = new Vector3();
+
+            float length = point.magnitude * frequency;
+
             offset.x += noise.Evaluate(new Vector3(length - time - seed, seed, 0));
             offset.y += noise.Evaluate(new Vector3(seed, length - time - seed, 0));
 
             offset = offset * 2 - new Vector3(1, 1, 0);
             offset = offset * amplitude * curveScale;
-            lr.SetPosition(i, point + offset);
+            lr.SetPosition(i, transform.position + point + offset);
         }
     }
 }
