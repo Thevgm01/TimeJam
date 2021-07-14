@@ -9,7 +9,7 @@ public class WavyLine : MonoBehaviour
     Noise noise;
 
     public Transform destination;
-    public float resolutionPerUnit;
+    [Range(0, 1)] public float resolutionPerUnit;
     float lastLength = 0;
 
     [Header("Noise")]
@@ -21,6 +21,8 @@ public class WavyLine : MonoBehaviour
     float noiseTimeTracker = 0;
 
     Vector3[] basePositions;
+    float[] lengths;
+    float[] curveScales;
 
     LineRenderer lr;
     Material mat;
@@ -49,18 +51,28 @@ public class WavyLine : MonoBehaviour
         {
             int numPositions = Mathf.RoundToInt(length / resolutionPerUnit);
             basePositions = new Vector3[numPositions];
+            lengths = new float[numPositions];
+            curveScales = new float[numPositions];
+
             basePositions[0] = Vector3.zero;
             basePositions[numPositions - 1] = destination.position - transform.position;
-
             Vector3 diff = destination.position - transform.position;
-            Vector3 resolutionDiff = diff.normalized * resolutionPerUnit;
+            Vector3 resolutionDiff = diff / numPositions;
+
+            lr.positionCount = numPositions;
+            lr.SetPosition(0, basePositions[0]);
+            lr.SetPosition(numPositions - 1, basePositions[numPositions - 1]);
+
             for (int i = 1; i < numPositions - 1; ++i)
             {
                 basePositions[i] = basePositions[i - 1] + resolutionDiff;
-            }
 
-            lr.positionCount = numPositions;
-            lr.SetPositions(basePositions);
+                lengths[i] = basePositions[i].magnitude;
+
+                float frac = (float)i / (basePositions.Length - 1);
+                float curveScale = noiseScaleOverLength.Evaluate(frac);
+                curveScales[i] = curveScale;
+            }
 
             lastLength = length;
         }
@@ -75,21 +87,17 @@ public class WavyLine : MonoBehaviour
             noise = new Noise();
 
         noiseTimeTracker += Time.deltaTime * speed;
-        for (int i = 0; i < basePositions.Length; i++)
+        for (int i = 1; i < basePositions.Length - 1; i++)
         {
-            float frac = (float)i / (basePositions.Length - 1);
-            float curveScale = noiseScaleOverLength.Evaluate(frac);
-
             Vector3 point = basePositions[i];
             Vector3 offset = new Vector3();
 
-            float length = point.magnitude * frequency;
+            float length = lengths[i] * frequency;
 
             offset.x += noise.Evaluate(length + noiseTimeTracker, 0);
             offset.y += noise.Evaluate(0, length + noiseTimeTracker);
 
-            //offset -= new Vector3(0.5f, 0.5f, 0);
-            offset = offset * amplitude * curveScale;
+            offset = offset * amplitude * curveScales[i];
             lr.SetPosition(i, point + offset);
         }
     }
