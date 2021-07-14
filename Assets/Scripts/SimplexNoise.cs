@@ -95,6 +95,11 @@ public class Noise
     }
 
 
+    public float Evaluate(float x, float y)
+    {
+        return Evaluate(new UnityEngine.Vector3(x, y, 0));
+    }
+
     /// <summary>
     /// Generates value, typically in range [-1, 1]
     /// </summary>
