@@ -9,24 +9,23 @@ public class WavyLine : MonoBehaviour
     Noise noise;
 
     public Transform destination;
-    [Range(0, 1)] public float resolutionPerUnit;
+    public float resolutionPerUnit;
     float lastLength = 0;
 
     [Header("Noise")]
     [Range(0, 30)] public float amplitude = 10f;
     [Range(0, 0.2f)] public float frequency = 1f;
     [Range(-3, 3)] public float speed = 1f;
-    [Range(0, 0.02f)] public float scrollTimeDelay = 0.01f;
     [Range(-3, 3)] public float textureSpeed = 1f;
     public AnimationCurve noiseScaleOverLength;
     float noiseTimeTracker = 0;
 
     Vector3[] basePositions;
-    Vector3[] noiseOffsets;
 
     LineRenderer lr;
     Material mat;
 
+    // Start is called before the first frame update
     void Awake()
     {
         noise = new Noise();
@@ -35,16 +34,10 @@ public class WavyLine : MonoBehaviour
         lr.sharedMaterial.mainTextureOffset = Vector2.zero;
     }
 
-    void Start()
-    {
-        SetBasePositions();
-    }
-
     // Update is called once per frame
     void Update()
     {
         SetBasePositions();
-        noiseTimeTracker += Time.deltaTime * speed;
         ApplyNoise();
         ScrollTexture();
     }
@@ -66,16 +59,13 @@ public class WavyLine : MonoBehaviour
                 basePositions[i] = basePositions[i - 1] + resolutionDiff;
             }
 
-            noiseOffsets = new Vector3[numPositions];
-            SetFirstNOffsets(numPositions);
-
             lr.positionCount = numPositions;
-            SetLinePoints();
+            lr.SetPositions(basePositions);
 
             lastLength = length;
         }
     }
-    float timeTracker = 0;
+
     void ApplyNoise()
     {
         if (!lr.isVisible)
@@ -84,45 +74,12 @@ public class WavyLine : MonoBehaviour
         if (noise == null)
             noise = new Noise();
 
-        timeTracker += Time.deltaTime;
-        int positionsAdvanced = 0;
-        if (scrollTimeDelay > 0)
+        noiseTimeTracker += Time.deltaTime * speed;
+        for (int i = 0; i < basePositions.Length; i++)
         {
-            while (timeTracker >= scrollTimeDelay)
-            {
-                ++positionsAdvanced;
-                timeTracker -= scrollTimeDelay;
-            }
-            if (positionsAdvanced > basePositions.Length)
-            {
-                positionsAdvanced = basePositions.Length;
-            }
-        }
-        else
-        {
-            positionsAdvanced = basePositions.Length;
-        }
+            float frac = (float)i / (basePositions.Length - 1);
+            float curveScale = noiseScaleOverLength.Evaluate(frac);
 
-        if (positionsAdvanced > 0)
-        {
-            MoveNOffsets(positionsAdvanced);
-            SetFirstNOffsets(positionsAdvanced);
-            SetLinePoints();
-        }
-    }
-
-    void MoveNOffsets(int n)
-    {
-        for (int i = noiseOffsets.Length - 1; i >= n; --i)
-        {
-            noiseOffsets[i] = noiseOffsets[i - n];
-        }
-    }
-
-    void SetFirstNOffsets(int n)
-    {
-        for (int i = 0; i < n; ++i)
-        {
             Vector3 point = basePositions[i];
             Vector3 offset = new Vector3();
 
@@ -131,20 +88,10 @@ public class WavyLine : MonoBehaviour
             offset.x += noise.Evaluate(length + noiseTimeTracker, 0);
             offset.y += noise.Evaluate(0, length + noiseTimeTracker);
 
-            noiseOffsets[i] = offset;
+            //offset -= new Vector3(0.5f, 0.5f, 0);
+            offset = offset * amplitude * curveScale;
+            lr.SetPosition(i, point + offset);
         }
-    }
-
-    void SetLinePoints()
-    {
-        for (int i = 0; i < basePositions.Length; ++i)
-        {
-            float frac = (float)i / (basePositions.Length - 1);
-            float curveScale = noiseScaleOverLength.Evaluate(frac);
-            Vector3 pos = basePositions[i] + noiseOffsets[i] * amplitude * curveScale;
-            lr.SetPosition(i, pos);
-        }
-
     }
 
     void ScrollTexture()
