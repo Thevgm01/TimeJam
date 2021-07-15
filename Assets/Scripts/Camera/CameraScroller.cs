@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraScroller : MonoBehaviour, ICameraMover
+public class CameraScroller : MonoBehaviour
 {
     public float scrollWheelScale;
     public bool invertScrollDirection;
@@ -43,10 +43,5 @@ public class CameraScroller : MonoBehaviour, ICameraMover
         desiredCameraPosition = transform.position + diff;
         desiredCameraPosition.z = 0;
         transform.position = desiredCameraPosition;
-    }
-
-    public void MoveToPoint(Vector3 point)
-    {
-        desiredCameraPosition = Vector3.zero;
     }
 }

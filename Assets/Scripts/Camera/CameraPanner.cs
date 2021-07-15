@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPanner : MonoBehaviour, ICameraMover
+public class CameraPanner : MonoBehaviour
 {
     Camera mainCam;
     Vector3 lastMousePosition;
@@ -51,11 +51,6 @@ public class CameraPanner : MonoBehaviour, ICameraMover
         mousePositions.Enqueue(new MouseAtTime { time = Time.time, position = Input.mousePosition });
 
         lastMousePosition = Input.mousePosition;
-    }
-
-    public void MoveToPoint(Vector3 point)
-    {
-        desiredCameraPosition = point;
     }
 
     Vector3 ScreenToWorldPointDifference(Vector3 screenPoint1, Vector3 screenPoint2)

@@ -48,8 +48,7 @@ public class FloatingText : MonoBehaviour
         }
 
         Vector3 cameraMovePoint = transform.position + Vector3.down * Dimensions.y / 2f;
-        FindObjectOfType<CameraPanner>().MoveToPoint(cameraMovePoint);
-        FindObjectOfType<CameraScroller>().MoveToPoint(cameraMovePoint);
+        FindObjectOfType<CameraFocuser>().Focus(cameraMovePoint);
 
         if (nodeClicked != null)
         {
