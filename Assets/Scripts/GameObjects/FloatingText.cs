@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class FloatingText : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class FloatingText : MonoBehaviour
 
     private TMPro.TextMeshPro tmp;
     public Vector2 Dimensions => new Vector2(tmp.preferredWidth, tmp.preferredHeight);
+
+    public Action<TextNode> nodeClicked = null;
 
     void Start()
     {
@@ -47,5 +50,24 @@ public class FloatingText : MonoBehaviour
         Vector3 cameraMovePoint = transform.position + Vector3.down * Dimensions.y / 2f;
         FindObjectOfType<CameraPanner>().MoveToPoint(cameraMovePoint);
         FindObjectOfType<CameraScroller>().MoveToPoint(cameraMovePoint);
+
+        if (nodeClicked != null)
+        {
+            TextRevealer revealer = GetComponent<TextRevealer>();
+            revealer.finishedRevealing += AddCollider;
+        }
+    }
+
+    void AddCollider()
+    {
+        tmp = GetComponent<TMPro.TextMeshPro>();
+        var collider = gameObject.AddComponent<BoxCollider>();
+        collider.center = tmp.bounds.center;
+        collider.size = tmp.bounds.size;
+    }
+
+    void OnMouseDown()
+    {
+        nodeClicked?.Invoke(node);
     }
 }
