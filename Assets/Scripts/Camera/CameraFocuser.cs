@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class CameraFocuser : MonoBehaviour
 {
+    private static CameraFocuser _instance;
+    public static CameraFocuser Instance { get => _instance; }
+
     public float lerpSpeed;
     Vector3 desiredLocalPosition;
+
+    void Awake()
+    {
+        _instance = this;
+    }
 
     void Update()
     {

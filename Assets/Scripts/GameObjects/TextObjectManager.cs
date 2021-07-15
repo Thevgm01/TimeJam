@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class TextObjectManager : MonoBehaviour
 {
+    private static TextObjectManager _instance;
+    public static TextObjectManager Instance { get => _instance; }
+
+
     public TextAsset gameScript;
     public GameObject textPrefab;
     public GameObject choicePrefab;
@@ -20,6 +24,8 @@ public class TextObjectManager : MonoBehaviour
 
     void Awake()
     {
+        _instance = this;
+
         textObjects = new Dictionary<string, FloatingText>();
         gameTextParser = new GameTextParser(gameScript);
 

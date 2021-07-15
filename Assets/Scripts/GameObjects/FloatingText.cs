@@ -40,7 +40,7 @@ public class FloatingText : MonoBehaviour
             }
 
             float parentHeight = ParentFT.Dimensions.y;
-            transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + StaticTextObjectManager.Manager.verticalSpaceBetweenObjects);
+            transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + TextObjectManager.Instance.verticalSpaceBetweenObjects);
         }
         else
         {
@@ -48,7 +48,7 @@ public class FloatingText : MonoBehaviour
         }
 
         Vector3 cameraMovePoint = transform.position + Vector3.down * Dimensions.y / 2f;
-        FindObjectOfType<CameraFocuser>().Focus(cameraMovePoint);
+        CameraFocuser.Instance.Focus(cameraMovePoint);
 
         if (nodeClicked != null)
         {

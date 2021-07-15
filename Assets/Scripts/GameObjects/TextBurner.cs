@@ -30,11 +30,11 @@ public class TextBurner : MonoBehaviour
         {
             Vector3 topLeft = tmp.textInfo.characterInfo[burnTextIndex].topLeft;
 
-            GameObject burnObject = Instantiate(StaticTextObjectManager.Manager.burnTextPrefab);
+            GameObject burnObject = Instantiate(TextObjectManager.Instance.burnTextPrefab);
             burnObject.GetComponent<TMPro.TextMeshPro>().text = burnText;
             float width = burnObject.GetComponent<RectTransform>().rect.width;
             burnObject.transform.position = topLeft + Vector3.right * width / 2f;
-            burnObject.transform.parent = StaticTextObjectManager.Manager.burnHolderTransform;
+            burnObject.transform.parent = TextObjectManager.Instance.burnHolderTransform;
 
             revealer.characterRevealed -= CharacterRevealed;
             Destroy(this);
