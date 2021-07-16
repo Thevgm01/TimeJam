@@ -2,32 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraScroller : MonoBehaviour
+public class CameraScroller : MonoBehaviour, ICameraMover
 {
-    public float scrollWheelScale;
-    public bool invertScrollDirection;
-    public float keyboardScale;
-    public float lerpSpeed;
+    CameraSettings settings;
 
-    Camera mainCam;
     float desiredSize;
     Vector3 mousePositionAtScroll;
     Vector3 desiredCameraPosition;
 
-    // Start is called before the first frame update
-    void Awake()
-    {
-        mainCam = Camera.main;
-        desiredSize = mainCam.orthographicSize;
-    }
-
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         float scrollAmount = 0f;
-        scrollAmount += Input.mouseScrollDelta.y * scrollWheelScale * (invertScrollDirection ? -1 : 1);
-        scrollAmount -= Input.GetKey(KeyCode.R) ? keyboardScale : 0;
-        scrollAmount += Input.GetKey(KeyCode.F) ? keyboardScale : 0;
+        scrollAmount += Input.mouseScrollDelta.y * settings.scrollWheelScale * (settings.invertScrollDirection ? -1 : 1);
+        scrollAmount -= Input.GetKey(KeyCode.R) ? settings.keyboardScrollScale : 0;
+        scrollAmount += Input.GetKey(KeyCode.F) ? settings.keyboardScrollScale : 0;
 
         if (scrollAmount != 0)
         {
@@ -35,13 +23,25 @@ public class CameraScroller : MonoBehaviour
             mousePositionAtScroll = Input.mousePosition;
         }
 
-        Vector3 originalMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
-        mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, desiredSize, lerpSpeed * Time.deltaTime);
-        Vector3 newMouseWorld = mainCam.ScreenToWorldPoint(mousePositionAtScroll);
+        Vector3 originalMouseWorld = settings.mainCam.ScreenToWorldPoint(mousePositionAtScroll);
+        settings.mainCam.orthographicSize = Mathf.Lerp(settings.mainCam.orthographicSize, desiredSize, settings.sizeLerpSpeed * Time.deltaTime);
+        Vector3 newMouseWorld = settings.mainCam.ScreenToWorldPoint(mousePositionAtScroll);
 
         Vector3 diff = originalMouseWorld - newMouseWorld;
         desiredCameraPosition = transform.position + diff;
         desiredCameraPosition.z = 0;
         transform.position = desiredCameraPosition;
+    }
+
+    public void MoveToPoint(Vector3 point)
+    {
+        desiredSize = settings.defaultOrthographicSize;
+        mousePositionAtScroll = settings.mainCam.ViewportToScreenPoint(new Vector3(0.5f, 0.5f, 0));
+    }
+
+    public void SetSettings(CameraSettings settings)
+    {
+        this.settings = settings;
+        desiredSize = settings.defaultOrthographicSize;
     }
 }

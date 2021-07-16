@@ -2,26 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFocuser : MonoBehaviour
+public class CameraFocuser : MonoBehaviour, ICameraMover
 {
-    private static CameraFocuser _instance;
-    public static CameraFocuser Instance { get => _instance; }
+    CameraSettings settings;
 
-    public float lerpSpeed;
     Vector3 desiredLocalPosition;
 
-    void Awake()
+    void LateUpdate()
     {
-        _instance = this;
+        transform.localPosition = Vector3.Lerp(transform.localPosition, desiredLocalPosition, settings.positionLerpSpeed * Time.deltaTime);
     }
 
-    void Update()
-    {
-        transform.localPosition = Vector3.Lerp(transform.localPosition, desiredLocalPosition, lerpSpeed * Time.deltaTime);
-    }
-
-    public void Focus(Vector3 pos)
+    public void MoveToPoint(Vector3 pos)
     {
         desiredLocalPosition = pos - transform.parent.position;
+    }
+
+    public void SetSettings(CameraSettings settings)
+    {
+        this.settings = settings;
     }
 }

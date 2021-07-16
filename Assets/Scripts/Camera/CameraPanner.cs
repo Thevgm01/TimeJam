@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraPanner : MonoBehaviour
+public class CameraPanner : MonoBehaviour, ICameraMover
 {
-    Camera mainCam;
+    CameraSettings settings;
+
     Vector3 lastMousePosition;
     Vector3 cameraVelocity;
     Vector3 desiredCameraPosition;
@@ -17,13 +18,8 @@ public class CameraPanner : MonoBehaviour
     Queue<MouseAtTime> mousePositions;
     float secondsOfPositionsToHold = 0.05f;
 
-    public float lerpSpeed;
-    public float slideSpeed = 0.1f;
-    [Range(0, 10)] public float velocityDecay;
-
     void Awake()
     {
-        mainCam = Camera.main;
         mousePositions = new Queue<MouseAtTime>();
     }
 
@@ -40,11 +36,11 @@ public class CameraPanner : MonoBehaviour
         }
         else
         {
-            cameraVelocity -= cameraVelocity * Time.deltaTime * velocityDecay;
+            cameraVelocity -= cameraVelocity * Time.deltaTime * settings.velocityDecay;
         }
 
         desiredCameraPosition -= cameraVelocity;
-        transform.position = Vector3.Lerp(transform.position, desiredCameraPosition, lerpSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, desiredCameraPosition, settings.positionLerpSpeed * Time.deltaTime);
 
         while (mousePositions.Count > 2 && mousePositions.Peek().time < Time.time - secondsOfPositionsToHold)
             mousePositions.Dequeue();
@@ -55,6 +51,17 @@ public class CameraPanner : MonoBehaviour
 
     Vector3 ScreenToWorldPointDifference(Vector3 screenPoint1, Vector3 screenPoint2)
     {
-        return mainCam.ScreenToWorldPoint(screenPoint1) - mainCam.ScreenToWorldPoint(screenPoint2);
+        return settings.mainCam.ScreenToWorldPoint(screenPoint1) - settings.mainCam.ScreenToWorldPoint(screenPoint2);
+    }
+
+    public void MoveToPoint(Vector3 point)
+    {
+        cameraVelocity = Vector3.zero;
+        desiredCameraPosition = transform.position;
+    }
+
+    public void SetSettings(CameraSettings settings)
+    {
+        this.settings = settings;
     }
 }
