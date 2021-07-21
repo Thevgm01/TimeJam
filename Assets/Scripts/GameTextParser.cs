@@ -37,12 +37,12 @@ public class GameTextParser
     {
         public string op;
         public string data;
+    }
 
-        public Command(string op, string data)
-        {
-            this.op = op;
-            this.data = data;
-        }
+    private struct Goto
+    {
+        public TextNode source;
+        public string destinationId;
     }
 
     public Dictionary<string, INode> namedNodes;
@@ -54,7 +54,7 @@ public class GameTextParser
         namedNodes = new Dictionary<string, INode>();
 
         INode curNode = null;
-        Dictionary<TextNode, string> gotos = new Dictionary<TextNode, string>();
+        List<Goto> gotos = new List<Goto>();
 
         lines = gameText.text.Split('\n');
         for (int i = 0; i < lines.Length; ++i)
@@ -80,6 +80,7 @@ public class GameTextParser
             INode newNode = null;
             ITextDisplayable text = null;
             string id = "";
+            string gotoDestination = "";
 
             for (int j = 0; j < commandStrings.Count; ++j)
             {
@@ -92,7 +93,7 @@ public class GameTextParser
                 }
                 else if (command.op == "GOTO")
                 {
-                    gotos[(TextNode)curNode] = command.data;
+                    gotoDestination = command.data;
                 }
                 else if (command.op == "BURN")
                 {
@@ -129,23 +130,25 @@ public class GameTextParser
             if (id != "")
                 namedNodes[id] = newNode;
 
+            if (gotoDestination != "")
+                gotos.Add(new Goto { source = (TextNode)newNode, destinationId = gotoDestination });
+
             if (curNode != null)
                 curNode.SetChild(newNode);
 
             curNode = newNode;
         }
 
-        foreach (KeyValuePair<TextNode, string> kvp in gotos)
+        foreach (Goto g in gotos)
         {
-            //Debug.Log("Linking \"" + g.parent.Text + "\" to " + g.destinationId);
-            if (!namedNodes.ContainsKey(kvp.Value))
-                Debug.LogError("Id " + kvp.Value + " is not defined in the game text.");
-            kvp.Key.parent.SetChild(namedNodes[kvp.Value]);
-            //namedNodes[kvp.Value].parent = kvp.Key;
+            Debug.Log("Linking node \"" + g.source.Text + "\" to " + g.destinationId);
+            if (!namedNodes.ContainsKey(g.destinationId))
+                Debug.LogError("Id " + g.destinationId + " is not defined in the game text.");
+            g.source.SetChild(namedNodes[g.destinationId]);
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand, INode curNode, Dictionary<TextNode, string> gotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand, INode curNode, List<Goto> gotos)
     {
         string[] choicesStringArray = choiceCommand.Split(',');
         ChoiceNode choiceNode = new ChoiceNode();
@@ -161,7 +164,7 @@ public class GameTextParser
 
                 if (command.op == "GOTO")
                 {
-                    gotos[textNode] = command.data;
+                    gotos.Add(new Goto { source = textNode, destinationId = command.data });
                 }
             }
         }
