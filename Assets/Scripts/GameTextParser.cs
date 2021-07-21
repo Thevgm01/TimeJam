@@ -153,7 +153,6 @@ public class GameTextParser
         {
             string choiceString = ExtractCommands(choicesStringArray[i], out var commands);
             TextNode textNode = new TextNode(choiceString, "", choiceNode);
-            choiceNode.children.Add(textNode);
 
             for (int j = 0; j < commands.Count; ++j)
             {
