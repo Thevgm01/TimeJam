@@ -82,7 +82,8 @@ public class TextObjectManager : MonoBehaviour
     FloatingText InstantiateClickableObject(TextNode node)
     {
         GameObject newTextObject = Instantiate(clickablePrefab);
-        newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
+        string prefix = "(CHOICE) ";
+        newTextObject.name = prefix + node.Text.Substring(0, Mathf.Min(20 - prefix.Length, node.Text.Length));
 
         FloatingTextClickable ft = newTextObject.GetComponent<FloatingTextClickable>();
         ft.node = node;
