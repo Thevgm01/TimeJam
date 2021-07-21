@@ -17,7 +17,7 @@ public class TextObjectManager : MonoBehaviour
 
     Dictionary<string, FloatingText> textObjects;
 
-    INode curNode;
+    INode activeNode;
     IEnumerator choiceObjectsInstantiator;
 
     GameTextParser gameTextParser;
@@ -29,25 +29,25 @@ public class TextObjectManager : MonoBehaviour
         textObjects = new Dictionary<string, FloatingText>();
         gameTextParser = new GameTextParser(gameScript);
 
-        curNode = gameTextParser.FirstNode;
+        activeNode = gameTextParser.FirstNode;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && curNode is TextNode)
+        if (Input.GetKeyDown(KeyCode.Space) && activeNode is TextNode)
         {
-            INode newNode = InstantiateTextObject((TextNode)curNode);
+            INode newNode = InstantiateTextObject((TextNode)activeNode);
 
             if (newNode is ChoiceNode)
             {
-                FloatingText parentFT = ((TextNode)curNode).floatingText;
+                FloatingText parentFT = ((TextNode)activeNode).floatingText;
                 TextRevealer parentRevealer = parentFT.GetComponent<TextRevealer>();
 
                 choiceObjectsInstantiator = InstantiateChoiceObject((ChoiceNode)newNode);
                 parentRevealer.finishedRevealing += StartInstantiatingChoiceObjects;
             }
 
-            curNode = newNode;
+            activeNode = newNode;
         }
     }
 
