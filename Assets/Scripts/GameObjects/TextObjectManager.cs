@@ -11,6 +11,7 @@ public class TextObjectManager : MonoBehaviour
     public TextAsset gameScript;
     public GameObject textPrefab;
     public GameObject choicePrefab;
+    public GameObject clickablePrefab;
     public GameObject burnTextPrefab;
     public Transform burnHolderTransform;
     public float verticalSpaceBetweenObjects;
@@ -36,7 +37,8 @@ public class TextObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && activeNode is TextNode)
         {
-            INode newNode = InstantiateTextObject((TextNode)activeNode);
+            InstantiateTextObject((TextNode)activeNode);
+            INode newNode = ((TextNode)activeNode).child;
 
             if (newNode is ChoiceNode)
             {
@@ -61,23 +63,34 @@ public class TextObjectManager : MonoBehaviour
         for (int i = 0; i < node.children.Count; ++i)
         {
             TextNode choice = (TextNode)node.children[i];
-            InstantiateTextObject(choice, listenForClick: true);
+            InstantiateClickableObject(choice);
             yield return new WaitForSeconds(0.2f);
         }
     }
 
-    INode InstantiateTextObject(TextNode node, bool listenForClick = false)
+    FloatingText InstantiateTextObject(TextNode node)
     {
         GameObject newTextObject = Instantiate(textPrefab);
         newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
 
         FloatingText ft = newTextObject.GetComponent<FloatingText>();
         ft.node = node;
-        ft.fixedToParent = false;
-        if (listenForClick)
-            ft.nodeClicked += NodeClicked;
         node.floatingText = ft;
-        return node.child;
+        return ft;
+    }
+
+    FloatingText InstantiateClickableObject(TextNode node)
+    {
+        GameObject newTextObject = Instantiate(clickablePrefab);
+        newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
+
+        FloatingTextClickable ft = newTextObject.GetComponent<FloatingTextClickable>();
+        ft.node = node;
+        node.floatingText = ft;
+
+        ft.nodeClicked += NodeClicked;
+
+        return ft;
     }
 
     public void MatchCharacterPositions(TMPro.TextMeshPro source, int sourceIndex, TMPro.TextMeshPro item, int itemIndex)

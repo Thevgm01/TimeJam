@@ -1,12 +1,4 @@
 [ORIGIN] You wake up in a room. You have no idea how you got here. All you know is that you must escape. Here's some extra text just to pad stuff out. I wonder if it will work?
-Here
-are
-some
-extra
-parts
-for
-more
-testing.
 [ROOM1] Looking around, you see a door on your left and a box in the corner of the room.
 [MINOR_CHOICE: Open the door [GOTO: DOOR1], Open the box [GOTO: BOX1]]
 

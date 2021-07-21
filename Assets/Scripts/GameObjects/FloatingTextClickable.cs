@@ -17,7 +17,7 @@ public class FloatingTextClickable : FloatingText
     void AddCollider()
     {
         tmp = GetComponent<TMPro.TextMeshPro>();
-        var collider = gameObject.AddComponent<BoxCollider>();
+        var collider = gameObject.GetComponent<BoxCollider>();
         collider.center = tmp.bounds.center;
         collider.size = tmp.bounds.size;
     }
