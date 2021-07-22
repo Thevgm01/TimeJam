@@ -8,25 +8,29 @@ public class TextNode : INode
     public string Text => textItem.GetText();
     public INode parent;
     public INode child;
-    public string id;
     public FloatingText floatingText;
     public int timeline;
 
-    public TextNode(ITextDisplayable textItem, string id, INode parent)
+    public TextNode(ITextDisplayable textItem, INode parent)
     {
         this.textItem = textItem;
-        this.id = id;
         if (parent != null)
         {
-            this.parent = parent;
             parent.SetChild(this);
+            TrySetParent(parent);
         }
     }
 
-    public TextNode(string text, string id, INode parent) : this(new TextStory(text), id, parent) { }
+    public TextNode(string text, INode parent) : this(new TextStory(text), parent) { }
 
     public void SetChild(INode node)
     {
         child = node;
+    }
+
+    public void TrySetParent(INode node)
+    {
+        if (parent == null && node != null)
+            parent = node;
     }
 }

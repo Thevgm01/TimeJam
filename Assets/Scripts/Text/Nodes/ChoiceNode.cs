@@ -17,6 +17,15 @@ public class ChoiceNode : INode
     public void SetChild(INode node)
     {
         if (!children.Contains(node))
+        {
             children.Add(node);
+            node.TrySetParent(this);
+        }
+    }
+
+    public void TrySetParent(INode node)
+    {
+        if (parent == null && node != null)
+            parent = node;
     }
 }

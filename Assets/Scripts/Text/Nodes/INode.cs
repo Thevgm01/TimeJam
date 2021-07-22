@@ -5,4 +5,5 @@ using UnityEngine;
 public interface INode
 {
     void SetChild(INode node);
+    void TrySetParent(INode node);
 }
