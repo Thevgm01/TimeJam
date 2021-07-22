@@ -13,11 +13,8 @@ public class TextNode : Node
     public TextNode(ITextDisplayable textItem, Node parent)
     {
         this.textItem = textItem;
-        if (parent != null)
-        {
-            parent.SetChild(this);
-            TrySetParent(parent);
-        }
+        parent?.SetChild(this);
+        TrySetParent(parent);
     }
 
     public TextNode(string text, Node parent) : this(new TextStory(text), parent) { }

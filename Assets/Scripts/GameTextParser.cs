@@ -137,8 +137,6 @@ public class GameTextParser
             if (gotoDestination != "")
                 gotos.Add(new Goto { source = (TextNode)newNode, destinationId = gotoDestination });
 
-            Debug.Log(newNode);
-
             if (nullNextParent)
             {
                 previousNode = null;
@@ -161,10 +159,10 @@ public class GameTextParser
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand, Node curNode, List<Goto> gotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand, Node parent, List<Goto> gotos)
     {
         string[] choicesStringArray = choiceCommand.Split(',');
-        ChoiceNode choiceNode = new ChoiceNode();
+        ChoiceNode choiceNode = new ChoiceNode(parent);
         for (int i = 0; i < choicesStringArray.Length; ++i)
         {
             string choiceString = ExtractCommands(choicesStringArray[i], out var commands);

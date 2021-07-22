@@ -7,10 +7,12 @@ public class ChoiceNode : Node
     public List<Node> children;
     public Dictionary<Node, FloatingText> floatingText;
 
-    public ChoiceNode()
+    public ChoiceNode(Node parent)
     {
         children = new List<Node>();
         floatingText = new Dictionary<Node, FloatingText>();
+        parent?.SetChild(this);
+        TrySetParent(parent);
     }
 
     public override void SetChild(Node node)
