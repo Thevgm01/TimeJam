@@ -45,15 +45,15 @@ public class GameTextParser
         public string destinationId;
     }
 
-    public Dictionary<string, INode> namedNodes;
-    public INode FirstNode => namedNodes["ORIGIN"];
+    public Dictionary<string, Node> namedNodes;
+    public Node FirstNode => namedNodes["ORIGIN"];
     private string[] lines;
 
     public GameTextParser(TextAsset gameText)
     {
-        namedNodes = new Dictionary<string, INode>();
+        namedNodes = new Dictionary<string, Node>();
 
-        INode previousNode = null;
+        Node previousNode = null;
         bool nullNextParent = false; // Prevent linking nodes when the current node should terminate
 
         List<Goto> gotos = new List<Goto>();
@@ -79,7 +79,7 @@ public class GameTextParser
                 return;
             }
 
-            INode newNode = null;
+            Node newNode = null;
             ITextDisplayable text = null;
             string id = "";
             string gotoDestination = "";
@@ -155,13 +155,13 @@ public class GameTextParser
             //Debug.Log("Linking node \"" + g.source.Text + "\" to " + g.destinationId);
             if (!namedNodes.ContainsKey(g.destinationId))
                 Debug.LogError("Id " + g.destinationId + " is not defined in the game text.");
-            INode destination = namedNodes[g.destinationId];
+            Node destination = namedNodes[g.destinationId];
             g.source.SetChild(destination);
             destination.TrySetParent(g.source);
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand, INode curNode, List<Goto> gotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand, Node curNode, List<Goto> gotos)
     {
         string[] choicesStringArray = choiceCommand.Split(',');
         ChoiceNode choiceNode = new ChoiceNode();

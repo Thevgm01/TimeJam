@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextNode : INode
+public class TextNode : Node
 {
     ITextDisplayable textItem;
     public string Text => textItem.GetText();
-    public INode parent;
-    public INode child;
+    public Node child;
     public FloatingText floatingText;
     public int timeline;
 
-    public TextNode(ITextDisplayable textItem, INode parent)
+    public TextNode(ITextDisplayable textItem, Node parent)
     {
         this.textItem = textItem;
         if (parent != null)
@@ -21,16 +20,10 @@ public class TextNode : INode
         }
     }
 
-    public TextNode(string text, INode parent) : this(new TextStory(text), parent) { }
+    public TextNode(string text, Node parent) : this(new TextStory(text), parent) { }
 
-    public void SetChild(INode node)
+    public override void SetChild(Node node)
     {
         child = node;
-    }
-
-    public void TrySetParent(INode node)
-    {
-        if (parent == null && node != null)
-            parent = node;
     }
 }

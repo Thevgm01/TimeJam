@@ -2,30 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChoiceNode : INode
+public class ChoiceNode : Node
 {
-    public INode parent;
-    public List<INode> children;
-    public Dictionary<INode, FloatingText> floatingText;
+    public List<Node> children;
+    public Dictionary<Node, FloatingText> floatingText;
 
     public ChoiceNode()
     {
-        children = new List<INode>();
-        floatingText = new Dictionary<INode, FloatingText>();
+        children = new List<Node>();
+        floatingText = new Dictionary<Node, FloatingText>();
     }
 
-    public void SetChild(INode node)
+    public override void SetChild(Node node)
     {
         if (!children.Contains(node))
         {
             children.Add(node);
             node.TrySetParent(this);
         }
-    }
-
-    public void TrySetParent(INode node)
-    {
-        if (parent == null && node != null)
-            parent = node;
     }
 }

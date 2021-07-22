@@ -18,7 +18,7 @@ public class TextObjectManager : MonoBehaviour
 
     Dictionary<string, FloatingText> textObjects;
 
-    INode activeNode;
+    Node activeNode;
     IEnumerator choiceObjectsInstantiator;
 
     GameTextParser gameTextParser;
@@ -38,7 +38,7 @@ public class TextObjectManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && activeNode is TextNode)
         {
             InstantiateTextObject((TextNode)activeNode);
-            INode newNode = ((TextNode)activeNode).child;
+            Node newNode = ((TextNode)activeNode).child;
 
             if (newNode is ChoiceNode)
             {
