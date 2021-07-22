@@ -63,11 +63,19 @@ public class GameTextParser
         {
             string line = lines[i].Trim();
 
+            // Ignore empty lines
             if (line == "")
             {
                 continue;
             }
 
+            // Set up base variables
+            Node newNode = null;
+            ITextDisplayable specialText = null;
+            string id = "";
+            string gotoDestination = "";
+
+            // Find all top-level commands
             List<string> commandStrings;
             try
             {
@@ -79,11 +87,7 @@ public class GameTextParser
                 return;
             }
 
-            Node newNode = null;
-            ITextDisplayable text = null;
-            string id = "";
-            string gotoDestination = "";
-
+            // Parse commands
             for (int j = 0; j < commandStrings.Count; ++j)
             {
                 string commandString = commandStrings[j];
@@ -107,11 +111,11 @@ public class GameTextParser
                     TextInventoryModifier.Operation opType =
                         command.op == "GET" ? TextInventoryModifier.Operation.Add :
                         TextInventoryModifier.Operation.Remove;
-                    text = new TextInventoryModifier(null, command.data, opType);
+                    specialText = new TextInventoryModifier(null, command.data, opType);
                 }
                 else if (command.op == "DEAD")
                 {
-                    text = new TextDead();
+                    specialText = new TextDead();
                     nullNextParent = true;
                 }
                 else if (command.op == "ID")
@@ -124,19 +128,25 @@ public class GameTextParser
                 }
             }
 
+            // If the new node wasn't created by a command, create it now as a basic text node
             if (newNode == null) {
-                if (text != null)
-                    newNode = new TextNode(text, previousNode);
+                // If some special text was assigned, use it
+                if (specialText != null)
+                    newNode = new TextNode(specialText, previousNode);
+                // Otherwise use the line itself
                 else
                     newNode = new TextNode(line, previousNode);
             }
 
+            // Now that the node exists, if an ID was set, assign it to the list
             if (id != "")
                 namedNodes[id] = newNode;
 
+            // Keep track of the Goto and deal with it later
             if (gotoDestination != "")
                 gotos.Add(new Goto { source = (TextNode)newNode, destinationId = gotoDestination });
 
+            // If the current node should not have a direct child
             if (nullNextParent)
             {
                 previousNode = null;
@@ -148,6 +158,7 @@ public class GameTextParser
             }
         }
 
+        // Now that all IDs in the text have been registered, go through the gotos and reassign parents/children as necessary
         foreach (Goto g in gotos)
         {
             //Debug.Log("Linking node \"" + g.source.Text + "\" to " + g.destinationId);
