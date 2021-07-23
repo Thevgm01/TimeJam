@@ -10,17 +10,16 @@ public class TextNode : Node
     public FloatingText floatingText;
     public int timeline;
 
-    public TextNode(ITextDisplayable textItem, Node parent)
+    public TextNode(ITextDisplayable textItem)
     {
         this.textItem = textItem;
-        parent?.SetChild(this);
-        TrySetParent(parent);
     }
 
-    public TextNode(string text, Node parent) : this(new TextStory(text), parent) { }
+    public TextNode(string text) : this(new TextStory(text)) { }
 
-    public override void SetChild(Node node)
+    public override void TrySetChild(Node node)
     {
-        child = node;
+        if (child == null && node != null)
+            child = node;
     }
 }

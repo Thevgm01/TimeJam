@@ -45,16 +45,56 @@ public class GameTextParser
         public string destinationId;
     }
 
+    private class Linker
+    {
+        public bool ShouldSkip { get; private set; } = false;
+        private bool shouldSkipNext = false;
+        public bool ShouldLink { get; private set; } = true;
+        private bool shouldLinkNext = true;
+
+        public void StopLinking()
+        {
+            shouldSkipNext = true;
+            shouldLinkNext = false;
+        }
+
+        public void StartLinking()
+        {
+            ShouldSkip = false;
+            shouldSkipNext = false;
+            shouldLinkNext = true;
+        }
+
+        public void Update()
+        {
+            ShouldLink = shouldLinkNext;
+            ShouldSkip = shouldSkipNext;
+        }
+
+        public void Link(Node parent, Node child)
+        {
+            if (parent == null || child == null)
+                return;
+            parent.TrySetChild(child);
+            child.TrySetParent(parent);
+            Debug.Log("Linking " + parent.Line + " with " + child.Line);
+        }
+    }
+
     public Dictionary<string, Node> namedNodes;
     public Node FirstNode => namedNodes["ORIGIN"];
     private string[] lines;
+
+    Linker linker;
 
     public GameTextParser(TextAsset gameText)
     {
         namedNodes = new Dictionary<string, Node>();
 
         Node previousNode = null;
-        bool nullNextParent = false; // Prevent linking nodes when the current node should terminate
+
+        // Prevent linking nodes when the current node should terminate
+        linker = new Linker();
 
         List<Goto> gotos = new List<Goto>();
 
@@ -69,12 +109,6 @@ public class GameTextParser
                 continue;
             }
 
-            // Set up base variables
-            Node newNode = null;
-            ITextDisplayable specialText = null;
-            string id = "";
-            string gotoDestination = "";
-
             // Find all top-level commands
             List<string> commandStrings;
             try
@@ -87,6 +121,15 @@ public class GameTextParser
                 return;
             }
 
+            // Set up base variables
+            Node newNode = null;
+            ITextDisplayable specialText = null;
+            string id = "";
+            string gotoDestination = "";
+
+            // Update the state of the linker
+            linker.Update();
+
             // Parse commands
             for (int j = 0; j < commandStrings.Count; ++j)
             {
@@ -95,12 +138,13 @@ public class GameTextParser
 
                 if (command.op == "MINOR_CHOICE" || command.op == "MAJOR_CHOICE")
                 {
-                    newNode = CreateChoiceNode(command.data, previousNode, gotos);
-                    nullNextParent = true;
+                    newNode = CreateChoiceNode(command.data, gotos);
+                    linker.StopLinking();
                 }
                 else if (command.op == "GOTO")
                 {
                     gotoDestination = command.data;
+                    linker.StopLinking();
                 }
                 else if (command.op == "BURN")
                 {
@@ -116,11 +160,12 @@ public class GameTextParser
                 else if (command.op == "DEAD")
                 {
                     specialText = new TextDead();
-                    nullNextParent = true;
+                    linker.StopLinking();
                 }
                 else if (command.op == "ID")
                 {
                     id = commandString;
+                    linker.StartLinking();
                 }
                 else
                 {
@@ -128,56 +173,61 @@ public class GameTextParser
                 }
             }
 
+            // If no ID was set and a previous node was an end point, there's no way to reach the current node
+            if (linker.ShouldSkip)
+            {
+                Debug.Log("Discarding " + (i + 1));
+                continue;
+            }
+
             // If the new node wasn't created by a command, create it now as a basic text node
             if (newNode == null) {
                 // If some special text was assigned, use it
                 if (specialText != null)
-                    newNode = new TextNode(specialText, previousNode);
+                    newNode = new TextNode(specialText);
                 // Otherwise use the line itself
                 else
-                    newNode = new TextNode(line, previousNode);
+                    newNode = new TextNode(line);
             }
+
+            Debug.Log("Creating " + (i + 1));
+            newNode.SetLine(i + 1);
 
             // Now that the node exists, if an ID was set, assign it to the list
             if (id != "")
                 namedNodes[id] = newNode;
 
+            // Set link the previous node and the current node
+            if (previousNode != null && linker.ShouldLink)
+                linker.Link(previousNode, newNode);
+
             // Keep track of the Goto and deal with it later
             if (gotoDestination != "")
                 gotos.Add(new Goto { source = (TextNode)newNode, destinationId = gotoDestination });
 
-            // If the current node should not have a direct child
-            if (nullNextParent)
-            {
-                previousNode = null;
-                nullNextParent = false;
-            }
-            else
-            {
-                previousNode = newNode;
-            }
+            // Advance the current node tracker
+            previousNode = newNode;
         }
 
         // Now that all IDs in the text have been registered, go through the gotos and reassign parents/children as necessary
+        Debug.Log("----- GOTO PARSING -----");
         foreach (Goto g in gotos)
         {
-            //Debug.Log("Linking node \"" + g.source.Text + "\" to " + g.destinationId);
             if (!namedNodes.ContainsKey(g.destinationId))
                 Debug.LogError("Id " + g.destinationId + " is not defined in the game text.");
-            Node destination = namedNodes[g.destinationId];
-            g.source.SetChild(destination);
-            destination.TrySetParent(g.source);
+            linker.Link(g.source, namedNodes[g.destinationId]);
         }
     }
 
-    private ChoiceNode CreateChoiceNode(string choiceCommand, Node parent, List<Goto> gotos)
+    private ChoiceNode CreateChoiceNode(string choiceCommand, List<Goto> gotos)
     {
         string[] choicesStringArray = choiceCommand.Split(',');
-        ChoiceNode choiceNode = new ChoiceNode(parent);
+        ChoiceNode choiceNode = new ChoiceNode();
         for (int i = 0; i < choicesStringArray.Length; ++i)
         {
             string choiceString = ExtractCommands(choicesStringArray[i], out var commands);
-            TextNode textNode = new TextNode(choiceString, choiceNode);
+            TextNode textNode = new TextNode(choiceString);
+            linker.Link(choiceNode, textNode);
 
             for (int j = 0; j < commands.Count; ++j)
             {
