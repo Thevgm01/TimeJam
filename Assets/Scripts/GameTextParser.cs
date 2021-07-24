@@ -104,7 +104,7 @@ public class GameTextParser
             string line = lines[i].Trim();
 
             // Ignore empty lines
-            if (line == "")
+            if (line == "" || line[0] == '#')
             {
                 continue;
             }

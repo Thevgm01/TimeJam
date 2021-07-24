@@ -1,3 +1,4 @@
+# This is a comment
 [ORIGIN] You wake up in a room. You have no idea how you got here. All you know is that you must escape. Here's some extra text just to pad stuff out. I wonder if it will work?
 I wonder if this will work? [GOTO: TEST]
 Should not appear.
