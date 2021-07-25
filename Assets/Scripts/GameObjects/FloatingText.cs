@@ -5,6 +5,8 @@ using System;
 
 public class FloatingText : MonoBehaviour
 {
+    public Action<FloatingText> initialized = delegate { };
+
     public TextNode node;
     public FloatingText ParentFT {
         get
@@ -36,18 +38,12 @@ public class FloatingText : MonoBehaviour
                 }
                 transform.SetParent(firstUnfixedParent.transform, false);
             }
-
-            float parentHeight = ParentFT.Dimensions.y;
-            transform.localPosition = ParentFT.transform.localPosition + Vector3.down * (parentHeight + TextObjectManager.Instance.verticalSpaceBetweenObjects);
         }
         else
         {
             transform.localPosition = Vector3.zero;
         }
 
-        Vector3 cameraMovePoint = transform.position + Vector3.down * Dimensions.y / 2f;
-        CameraManager.Instance.Focus(cameraMovePoint);
+        initialized?.Invoke(this);
     }
-
-
 }

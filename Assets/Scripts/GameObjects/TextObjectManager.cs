@@ -7,7 +7,6 @@ public class TextObjectManager : MonoBehaviour
     private static TextObjectManager _instance;
     public static TextObjectManager Instance { get => _instance; }
 
-
     public TextAsset gameScript;
     public GameObject textPrefab;
     public GameObject choicePrefab;
@@ -19,7 +18,8 @@ public class TextObjectManager : MonoBehaviour
     Dictionary<string, FloatingText> textObjects;
 
     Node activeNode;
-    IEnumerator choiceObjectsInstantiator;
+    Node newNode;
+    FloatingText activeFT;
 
     GameTextParser gameTextParser;
 
@@ -30,41 +30,41 @@ public class TextObjectManager : MonoBehaviour
         textObjects = new Dictionary<string, FloatingText>();
         gameTextParser = new GameTextParser(gameScript);
 
-        activeNode = gameTextParser.FirstNode;
+        newNode = gameTextParser.FirstNode;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && activeNode is TextNode)
+        if (Input.GetKeyDown(KeyCode.Space) && newNode != null)
         {
-            InstantiateTextObject((TextNode)activeNode);
-            Node newNode = ((TextNode)activeNode).child;
-
-            if (newNode is ChoiceNode)
-            {
-                FloatingText parentFT = ((TextNode)activeNode).floatingText;
-                TextRevealer parentRevealer = parentFT.GetComponent<TextRevealer>();
-
-                choiceObjectsInstantiator = InstantiateChoiceObject((ChoiceNode)newNode);
-                parentRevealer.finishedRevealing += StartInstantiatingChoiceObjects;
-            }
-
             activeNode = newNode;
-        }
-    }
 
-    void StartInstantiatingChoiceObjects()
-    {
-        StartCoroutine(choiceObjectsInstantiator);
+            if (activeNode is TextNode)
+            {
+                activeFT = InstantiateTextObject((TextNode)activeNode);
+                activeFT.initialized += CenterCamera;
+                newNode = ((TextNode)activeNode).child;
+            }
+            else if (activeNode is ChoiceNode)
+            {
+                IEnumerator instantiator = InstantiateChoiceObject((ChoiceNode)newNode);
+                StartCoroutine(instantiator);
+                newNode = null;
+            }
+        }
     }
 
     IEnumerator InstantiateChoiceObject(ChoiceNode node)
     {
-        for (int i = 0; i < node.children.Count; ++i)
+        TextNode choice = (TextNode)node.children[0];
+        activeFT = InstantiateClickableObject(choice, verticalSpaceBetweenObjects);
+        activeFT.initialized += CenterCamera;
+
+        for (int i = 1; i < node.children.Count; ++i)
         {
-            TextNode choice = (TextNode)node.children[i];
-            InstantiateClickableObject(choice);
             yield return new WaitForSeconds(0.2f);
+            choice = (TextNode)node.children[i];
+            activeFT = InstantiateClickableObject(choice, 0);
         }
     }
 
@@ -73,17 +73,37 @@ public class TextObjectManager : MonoBehaviour
         GameObject newTextObject = Instantiate(textPrefab);
         newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
 
+        if (activeFT == null)
+        {
+            newTextObject.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            float height = activeFT.Dimensions.y;
+            newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + verticalSpaceBetweenObjects);
+        }
+
         FloatingText ft = newTextObject.GetComponent<FloatingText>();
         ft.node = node;
         node.floatingText = ft;
         return ft;
     }
 
-    FloatingText InstantiateClickableObject(TextNode node)
+    FloatingText InstantiateClickableObject(TextNode node, float spaceOffset)
     {
         GameObject newTextObject = Instantiate(clickablePrefab);
         string prefix = "(CHOICE) ";
         newTextObject.name = prefix + node.Text.Substring(0, Mathf.Min(20 - prefix.Length, node.Text.Length));
+
+        if (activeFT == null)
+        {
+            newTextObject.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            float height = activeFT.Dimensions.y;
+            newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + spaceOffset);
+        }
 
         FloatingTextClickable ft = newTextObject.GetComponent<FloatingTextClickable>();
         ft.node = node;
@@ -106,5 +126,11 @@ public class TextObjectManager : MonoBehaviour
     void NodeClicked(TextNode node)
     {
         Debug.Log(node.Text);
+    }
+
+    void CenterCamera(FloatingText ft)
+    {
+        Vector3 cameraMovePoint = ft.transform.position + Vector3.down * ft.Dimensions.y / 2f;
+        CameraManager.Instance.Focus(cameraMovePoint);
     }
 }
