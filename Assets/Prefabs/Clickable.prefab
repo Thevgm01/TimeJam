@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fixedToParent: 1
+  clickedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!114 &9052803754845904995
 MonoBehaviour:
   m_ObjectHideFlags: 0

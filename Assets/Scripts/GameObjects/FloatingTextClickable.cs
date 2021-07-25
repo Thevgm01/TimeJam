@@ -6,6 +6,7 @@ using System;
 public class FloatingTextClickable : FloatingText
 {
     public Action<TextNode> nodeClicked = null;
+    public Color clickedColor;
 
     protected override void Start()
     {
@@ -25,5 +26,6 @@ public class FloatingTextClickable : FloatingText
     void OnMouseDown()
     {
         nodeClicked?.Invoke(node);
+        tmp.color = clickedColor;
     }
 }
