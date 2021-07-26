@@ -41,7 +41,7 @@ public class TextObjectManager : MonoBehaviour
 
             if (activeNode is TextNode)
             {
-                activeFT = InstantiateTextObject((TextNode)activeNode);
+                activeFT = InstantiateTextObject((TextNode)activeNode, textPrefab, verticalSpaceBetweenObjects);
                 activeFT.initialized += CenterCamera;
                 newNode = ((TextNode)activeNode).child;
             }
@@ -56,21 +56,27 @@ public class TextObjectManager : MonoBehaviour
 
     IEnumerator InstantiateChoiceObject(ChoiceNode node)
     {
-        TextNode choice = (TextNode)node.children[0];
-        activeFT = InstantiateClickableObject(choice, verticalSpaceBetweenObjects);
-        activeFT.initialized += CenterCamera;
+        float heightOffset = verticalSpaceBetweenObjects;
 
-        for (int i = 1; i < node.children.Count; ++i)
+        for (int i = 0; i < node.children.Count; ++i)
         {
+            TextNode choice = (TextNode)node.children[i];
+            activeFT = InstantiateTextObject(choice, clickablePrefab, heightOffset);
+            activeFT.name = "(CHOICE) " + activeFT.name;
+            ((FloatingTextClickable)activeFT).nodeClicked += NodeClicked;
+
+            if (i == 0)
+            {
+                activeFT.initialized += CenterCamera;
+                heightOffset = 0;
+            }
             yield return new WaitForSeconds(0.2f);
-            choice = (TextNode)node.children[i];
-            activeFT = InstantiateClickableObject(choice, 0);
         }
     }
 
-    FloatingText InstantiateTextObject(TextNode node)
+    FloatingText InstantiateTextObject(TextNode node, GameObject prefab, float heightOffset)
     {
-        GameObject newTextObject = Instantiate(textPrefab);
+        GameObject newTextObject = Instantiate(prefab);
         newTextObject.name = node.Text.Substring(0, Mathf.Min(20, node.Text.Length));
 
         if (activeFT == null)
@@ -80,7 +86,7 @@ public class TextObjectManager : MonoBehaviour
         else
         {
             float height = activeFT.Dimensions.y;
-            newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + verticalSpaceBetweenObjects);
+            newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + heightOffset);
         }
 
         FloatingText ft = newTextObject.GetComponent<FloatingText>();
@@ -89,32 +95,7 @@ public class TextObjectManager : MonoBehaviour
         return ft;
     }
 
-    FloatingText InstantiateClickableObject(TextNode node, float spaceOffset)
-    {
-        GameObject newTextObject = Instantiate(clickablePrefab);
-        string prefix = "(CHOICE) ";
-        newTextObject.name = prefix + node.Text.Substring(0, Mathf.Min(20 - prefix.Length, node.Text.Length));
-
-        if (activeFT == null)
-        {
-            newTextObject.transform.localPosition = Vector3.zero;
-        }
-        else
-        {
-            float height = activeFT.Dimensions.y;
-            newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + spaceOffset);
-        }
-
-        FloatingTextClickable ft = newTextObject.GetComponent<FloatingTextClickable>();
-        ft.node = node;
-        node.floatingText = ft;
-
-        ft.nodeClicked += NodeClicked;
-
-        return ft;
-    }
-
-    public void MatchCharacterPositions(TMPro.TextMeshPro source, int sourceIndex, TMPro.TextMeshPro item, int itemIndex)
+    public static void MatchCharacterPositions(TMPro.TextMeshPro source, int sourceIndex, TMPro.TextMeshPro item, int itemIndex)
     {
         var sourceCharInfo = source.textInfo.characterInfo[sourceIndex];
         var itemCharInfo = item.textInfo.characterInfo[itemIndex];
@@ -128,7 +109,7 @@ public class TextObjectManager : MonoBehaviour
         Debug.Log(node.Text);
     }
 
-    void CenterCamera(FloatingText ft)
+    static void CenterCamera(FloatingText ft)
     {
         Vector3 cameraMovePoint = ft.transform.position + Vector3.down * ft.Dimensions.y / 2f;
         CameraManager.Instance.Focus(cameraMovePoint);

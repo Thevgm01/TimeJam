@@ -37,7 +37,7 @@ public class TextRevealer : MonoBehaviour
             tmp.maxVisibleCharacters = curLetterIndex;
 
             if (curLetterIndex < tmp.text.Length)
-                TextObjectManager.Instance.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
+                TextObjectManager.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
             else
                 Destroy(revealerCharacter);
 

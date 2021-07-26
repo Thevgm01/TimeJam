@@ -39,10 +39,6 @@ public class FloatingText : MonoBehaviour
                 transform.SetParent(firstUnfixedParent.transform, false);
             }
         }
-        else
-        {
-            transform.localPosition = Vector3.zero;
-        }
 
         initialized?.Invoke(this);
     }
