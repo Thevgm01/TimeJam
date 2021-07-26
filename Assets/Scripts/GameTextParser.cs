@@ -117,7 +117,7 @@ public class GameTextParser
             }
             catch
             {
-                Debug.LogError("Improper command brackets on line " + i + " of game text.");
+                Debug.LogError("Improper command brackets on line " + (i + 1) + " of game text.");
                 return;
             }
 
@@ -190,7 +190,9 @@ public class GameTextParser
                     newNode = new TextNode(line);
             }
 
-            Debug.Log("Creating " + (i + 1));
+            Debug.Log("Creating " + (i + 1) + " as " + newNode.GetType());
+            if (newNode is ChoiceNode)
+                Debug.Log(((ChoiceNode)newNode).children.Count + " children");
             newNode.SetLine(i + 1);
 
             // Now that the node exists, if an ID was set, assign it to the list
@@ -265,6 +267,7 @@ public class GameTextParser
         int startIndex = -1;
         int bracketCounter = 0;
         commands = new List<string>();
+
         for (int i = 0; i < line.Length; ++i)
         {
             if (line[i] == '[')
@@ -295,10 +298,17 @@ public class GameTextParser
                     }
 
                     commands.Add(command);
+                    i = startIndex - 1; // Needed to reset the index back to where the command started (since it's removed from the string)
                     startIndex = -1;
                 }
             }
         }
+
+        if (bracketCounter != 0)
+        {
+            throw new System.FormatException("");
+        }
+
         line = line.Trim();
         while (line.Contains("  ")) 
             line = line.Replace("  ", " ");

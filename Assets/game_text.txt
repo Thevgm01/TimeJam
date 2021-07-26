@@ -4,7 +4,7 @@ I wonder if this will work? [GOTO: TEST]
 Should not appear.
 [TEST] Should appear.
 [ROOM1] Looking around, you see a door on your left and a box in the corner of the room.
-[MINOR_CHOICE: Open the door [GOTO: DOOR1], Open the box [GOTO: BOX1]]
+[MINOR_CHOICE: Open the door [GOTO: DOOR1], Open the box [GOTO: BOX1], A third choice purely for testing [GOTO: ORIGIN]]
 
 [DOOR1] You walk over to the door. It is made of wood and has a metal knob. It appears to be very old.
 The handle is locked.
