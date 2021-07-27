@@ -18,7 +18,6 @@ public class TextObjectManager : MonoBehaviour
     Dictionary<string, FloatingText> textObjects;
 
     Node activeNode;
-    Node newNode;
     FloatingText activeFT;
 
     GameTextParser gameTextParser;
@@ -30,28 +29,32 @@ public class TextObjectManager : MonoBehaviour
         textObjects = new Dictionary<string, FloatingText>();
         gameTextParser = new GameTextParser(gameScript);
 
-        newNode = gameTextParser.FirstNode;
+        activeNode = gameTextParser.FirstNode;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && newNode != null)
+        if (Input.GetKeyDown(KeyCode.Space) && activeNode != null)
         {
-            activeNode = newNode;
-
-            if (activeNode is TextNode)
-            {
-                activeFT = InstantiateTextObject((TextNode)activeNode, textPrefab, verticalSpaceBetweenObjects);
-                activeFT.initialized += CenterCamera;
-                newNode = ((TextNode)activeNode).child;
-            }
-            else if (activeNode is ChoiceNode)
-            {
-                IEnumerator instantiator = InstantiateChoiceObject((ChoiceNode)newNode);
-                StartCoroutine(instantiator);
-                newNode = null;
-            }
+            activeNode = CreateNode(activeNode);
         }
+    }
+
+    Node CreateNode(Node node)
+    {
+        if (node is TextNode)
+        {
+            activeFT = InstantiateTextObject((TextNode)node, textPrefab, verticalSpaceBetweenObjects);
+            activeFT.initialized += CenterCamera;
+            return ((TextNode)node).child;
+        }
+        else if (node is ChoiceNode)
+        {
+            IEnumerator instantiator = InstantiateChoiceObject((ChoiceNode)node);
+            StartCoroutine(instantiator);
+            return null;
+        }
+        return null;
     }
 
     IEnumerator InstantiateChoiceObject(ChoiceNode node)
@@ -106,7 +109,20 @@ public class TextObjectManager : MonoBehaviour
 
     void NodeClicked(TextNode node)
     {
-        Debug.Log(node.Text);
+        Node child = node.child;
+
+        if (child is TextNode && ((TextNode)child).floatingText != null)
+        {
+            FloatingText ft = ((TextNode)child).floatingText;
+            if (ft != null)
+            {
+                CenterCamera(ft);
+            }
+        }
+        else
+        {
+            activeNode = CreateNode(child);
+        }
     }
 
     static void CenterCamera(FloatingText ft)
