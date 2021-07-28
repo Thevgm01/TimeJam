@@ -9,11 +9,17 @@ public class FloatingTextClickable : FloatingText
     public Color clickedColor;
     Vector3 startClickPosition;
 
+    SpriteRenderer background = null;
+    public Vector2 backgroundPadding = new Vector2();
+
     protected override void Start()
     {
         base.Start();
         TextRevealer revealer = GetComponent<TextRevealer>();
         revealer.finishedRevealing += AddCollider;
+
+        background = GetComponentInChildren<SpriteRenderer>();
+        background.size = (new Vector2(tmp.preferredWidth, tmp.preferredHeight) + backgroundPadding) / background.transform.localScale;
     }
 
     void AddCollider()
