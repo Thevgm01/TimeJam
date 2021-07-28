@@ -7,6 +7,7 @@ public class FloatingTextClickable : FloatingText
 {
     public Action<TextNode> nodeClicked = null;
     public Color clickedColor;
+    Vector3 startClickPosition;
 
     protected override void Start()
     {
@@ -25,7 +26,15 @@ public class FloatingTextClickable : FloatingText
 
     void OnMouseDown()
     {
-        nodeClicked?.Invoke(node);
-        tmp.color = clickedColor;
+        startClickPosition = Input.mousePosition;
+    }
+
+    void OnMouseUp()
+    {
+        if (Input.mousePosition == startClickPosition)
+        {
+            nodeClicked?.Invoke(node);
+            tmp.color = clickedColor;
+        }
     }
 }
