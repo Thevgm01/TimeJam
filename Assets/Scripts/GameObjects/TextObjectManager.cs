@@ -9,11 +9,12 @@ public class TextObjectManager : MonoBehaviour
 
     public TextAsset gameScript;
     public GameObject textPrefab;
-    public GameObject choicePrefab;
     public GameObject clickablePrefab;
     public GameObject burnTextPrefab;
     public Transform burnHolderTransform;
     public float verticalSpaceBetweenObjects;
+    public float verticalSpaceBetweenChoices;
+    public float delayBetweenChoiceInstantiation;
 
     Dictionary<string, FloatingText> textObjects;
 
@@ -71,9 +72,9 @@ public class TextObjectManager : MonoBehaviour
             if (i == 0)
             {
                 activeFT.initialized += CenterCamera;
-                heightOffset = 0;
+                heightOffset = verticalSpaceBetweenChoices;
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(delayBetweenChoiceInstantiation);
         }
     }
 

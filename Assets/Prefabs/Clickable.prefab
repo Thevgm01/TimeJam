@@ -55,7 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   revealerCharacter: {fileID: 9052803754845904994, guid: 47e4ca881e7d46f469b5644cf8eb4cfc,
     type: 3}
-  lettersPerSecond: 300
+  lettersPerSecond: 100
 --- !u!23 &9052803754845904993
 MeshRenderer:
   m_ObjectHideFlags: 0
