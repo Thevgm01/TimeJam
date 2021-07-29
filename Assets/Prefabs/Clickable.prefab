@@ -98,8 +98,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9052803754845904998}
   - component: {fileID: 9052803754845904996}
-  - component: {fileID: 9052803754845904993}
   - component: {fileID: 3927692785552692949}
+  - component: {fileID: -3266843823976056667}
+  - component: {fileID: 9052803754845904993}
   - component: {fileID: 9052803754845904995}
   - component: {fileID: 9052803754845904999}
   - component: {fileID: 4305847097422820090}
@@ -145,6 +146,34 @@ MonoBehaviour:
   revealerCharacter: {fileID: 9052803754845904994, guid: 47e4ca881e7d46f469b5644cf8eb4cfc,
     type: 3}
   lettersPerSecond: 100
+--- !u!114 &3927692785552692949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052803754845904994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27421823f1fda5b48933f58b16dde1d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixedToParent: 1
+  clickedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+--- !u!114 &-3266843823976056667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9052803754845904994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32e89511b2a2404c94364096fe00a9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  expandWithRevealer: 1
+  backgroundPadding: {x: 0.4, y: 0.1}
 --- !u!23 &9052803754845904993
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -186,21 +215,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3927692785552692949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9052803754845904994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27421823f1fda5b48933f58b16dde1d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fixedToParent: 1
-  clickedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  backgroundPadding: {x: 0.2, y: 0.02}
 --- !u!114 &9052803754845904995
 MonoBehaviour:
   m_ObjectHideFlags: 0

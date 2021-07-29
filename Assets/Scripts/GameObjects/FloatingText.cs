@@ -19,7 +19,8 @@ public class FloatingText : MonoBehaviour
     public bool fixedToParent = true;
 
     protected TMPro.TextMeshPro tmp;
-    public Vector2 Dimensions => new Vector2(tmp.preferredWidth, tmp.preferredHeight);
+    public Vector2 Dimensions => new Vector2(tmp.renderedWidth, tmp.renderedHeight);
+    public Vector2 PreferredDimensions => new Vector2(tmp.preferredWidth, tmp.preferredHeight);
 
     protected virtual void Start()
     {

@@ -89,7 +89,7 @@ public class TextObjectManager : MonoBehaviour
         }
         else
         {
-            float height = activeFT.Dimensions.y;
+            float height = activeFT.PreferredDimensions.y;
             newTextObject.transform.localPosition = activeFT.transform.localPosition + Vector3.down * (height + heightOffset);
         }
 
@@ -128,7 +128,7 @@ public class TextObjectManager : MonoBehaviour
 
     static void CenterCamera(FloatingText ft)
     {
-        Vector3 cameraMovePoint = ft.transform.position + Vector3.down * ft.Dimensions.y / 2f;
+        Vector3 cameraMovePoint = ft.transform.position + Vector3.down * ft.PreferredDimensions.y / 2f;
         CameraManager.Instance.Focus(cameraMovePoint);
     }
 }
