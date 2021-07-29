@@ -35,6 +35,7 @@ public class TextRevealer : MonoBehaviour
             timeTracker += Time.deltaTime;
             curLetterIndex = (int)Mathf.Clamp(timeTracker * lettersPerSecond, 0, tmp.text.Length);
             tmp.maxVisibleCharacters = curLetterIndex;
+            tmp.ForceMeshUpdate();
 
             if (curLetterIndex < tmp.text.Length)
                 TextObjectManager.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
