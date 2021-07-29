@@ -24,8 +24,11 @@ public class TextRevealer : MonoBehaviour
         tmp = GetComponent<TMPro.TextMeshPro>();
         tmp.maxVisibleCharacters = 0;
 
-        revealerCharacter = Instantiate(revealerCharacter);
-        revealerTmp = revealerCharacter.GetComponent<TMPro.TextMeshPro>();
+        if (revealerCharacter != null)
+        {
+            revealerCharacter = Instantiate(revealerCharacter);
+            revealerTmp = revealerCharacter.GetComponent<TMPro.TextMeshPro>();
+        }
     }
 
     void Update()
@@ -37,10 +40,13 @@ public class TextRevealer : MonoBehaviour
             tmp.maxVisibleCharacters = curLetterIndex;
             tmp.ForceMeshUpdate();
 
-            if (curLetterIndex < tmp.text.Length)
-                TextObjectManager.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
-            else
-                Destroy(revealerCharacter);
+            if (revealerCharacter != null)
+            {
+                if (curLetterIndex < tmp.text.Length)
+                    TextObjectManager.MatchCharacterPositions(tmp, curLetterIndex, revealerTmp, 0);
+                else
+                    Destroy(revealerCharacter);
+            }
 
             characterRevealed?.Invoke(curLetterIndex);
         }

@@ -143,8 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a39034e01a1944bb19181106da420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  revealerCharacter: {fileID: 9052803754845904994, guid: 47e4ca881e7d46f469b5644cf8eb4cfc,
-    type: 3}
+  revealerCharacter: {fileID: 0}
   lettersPerSecond: 100
 --- !u!114 &3927692785552692949
 MonoBehaviour:
