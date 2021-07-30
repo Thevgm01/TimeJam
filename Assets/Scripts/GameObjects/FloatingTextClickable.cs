@@ -26,12 +26,12 @@ public class FloatingTextClickable : FloatingText
 
     void OnMouseDown()
     {
-        startClickPosition = Input.mousePosition;
+        startClickPosition = Camera.main.transform.position;
     }
 
     void OnMouseUp()
     {
-        if (Input.mousePosition == startClickPosition)
+        if (Camera.main.transform.position == startClickPosition)
         {
             nodeClicked?.Invoke(node);
             tmp.color = clickedColor;
