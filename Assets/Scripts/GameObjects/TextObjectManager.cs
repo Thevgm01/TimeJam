@@ -110,14 +110,20 @@ public class TextObjectManager : MonoBehaviour
 
     void NodeClicked(TextNode node)
     {
+        if (activeNode != null)
+            return;
+
+        FloatingTextClickable ft = (FloatingTextClickable)node.floatingText;
+        ft.SetColor(ft.clickedColor);
+
         Node child = node.child;
 
         if (child is TextNode && ((TextNode)child).floatingText != null)
         {
-            FloatingText ft = ((TextNode)child).floatingText;
-            if (ft != null)
+            FloatingText childFt = ((TextNode)child).floatingText;
+            if (childFt != null)
             {
-                CenterCamera(ft);
+                CenterCamera(childFt);
             }
         }
         else

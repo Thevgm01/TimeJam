@@ -34,7 +34,6 @@ public class FloatingTextClickable : FloatingText
         if (Camera.main.transform.position == startClickPosition)
         {
             nodeClicked?.Invoke(node);
-            tmp.color = clickedColor;
         }
     }
 }

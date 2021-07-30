@@ -43,4 +43,9 @@ public class FloatingText : MonoBehaviour
 
         initialized?.Invoke(this);
     }
+
+    public void SetColor(Color col)
+    {
+        tmp.color = col;
+    }
 }
