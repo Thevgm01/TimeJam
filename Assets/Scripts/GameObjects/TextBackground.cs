@@ -18,7 +18,7 @@ public class TextBackground : MonoBehaviour
         background = GetComponentInChildren<SpriteRenderer>();
         if (expandWithRevealer)
         {
-            background.transform.localPosition = new Vector3(0, 0, -1000);
+            background.transform.localPosition = new Vector3(-1000, 0, -1000);
             TextRevealer revealer = GetComponent<TextRevealer>();
             revealer.characterRevealed += (int c) => { SetSize(ft.Dimensions); };
             revealer.finishedRevealing += () => { SetSize(ft.PreferredDimensions); Destroy(this); };
