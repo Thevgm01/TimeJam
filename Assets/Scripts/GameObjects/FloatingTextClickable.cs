@@ -7,7 +7,8 @@ public class FloatingTextClickable : FloatingText
 {
     public Action<TextNode> nodeClicked = null;
     public Color clickedColor;
-    Vector3 startClickPosition;
+    Vector3 startClickCamPosition;
+    Vector3 startClickMousePosition;
 
     protected override void Start()
     {
@@ -26,12 +27,14 @@ public class FloatingTextClickable : FloatingText
 
     void OnMouseDown()
     {
-        startClickPosition = Camera.main.transform.position;
+        startClickCamPosition = Camera.main.transform.position;
+        startClickMousePosition = Input.mousePosition;
     }
 
     void OnMouseUp()
     {
-        if (Camera.main.transform.position == startClickPosition)
+        if (Vector3.Distance(Camera.main.transform.position, startClickCamPosition) < 0.1f &&
+            Vector3.Distance(Input.mousePosition, startClickMousePosition) == 0.0f)
         {
             nodeClicked?.Invoke(node);
         }
